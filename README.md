@@ -3,7 +3,7 @@
 
 ## Team Members
 
-- Student 1
-- Student 2
+- Pasang Sherpa
+- Kenneth Wen
 - Elliot Verduzco
-- Student 4
+- Hritik Milnd Zope
