@@ -5,5 +5,5 @@
 
 - Student 1
 - Student 2
-- Student 3
+- Elliot Verduzco
 - Student 4
