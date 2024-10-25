@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start:dev": "nodemon --exec ts-node src/server/index.ts",
     "start": "ts-node src/server/index.ts"
   },
   "keywords": [],
@@ -11,14 +12,15 @@
   "license": "ISC",
   "dependencies": {
     "@types/express": "^5.0.0",
-    "@types/node": "^22.8.1",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^5.0.1",
-    "http-errors": "^2.0.0",
-    "typescript": "^5.6.3"
+    "http-errors": "^2.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "@types/node": "^22.8.1",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
   }
 }
