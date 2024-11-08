@@ -1,3 +1,1 @@
-
-
-console.log("Hello this is a bundled asset.");
+console.log("Hello from a bundled asset.");

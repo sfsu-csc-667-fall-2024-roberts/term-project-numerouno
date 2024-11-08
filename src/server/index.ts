@@ -6,6 +6,8 @@ import morgan from "morgan";
 import * as path from "path";
 import connectLiveReload from "connect-livereload";
 import livereload from "livereload"
+import connectLiveReload from "connect-livereload";
+import livereload from "livereload";
 
 import { timeMiddleware } from "./middleware/time";
 
@@ -53,5 +55,17 @@ if (process.env.NODE_ENV === "development") {
         }, 100);
     });
 
+    app.use(connectLiveReload());
+}
+const staticPath = path.join(process.cwd(), "src", "public");
+app.use(express.static(staticPath));
+if (process.env.NODE_ENV === "development") {
+    const reloadServer = livereload.createServer();
+    reloadServer.watch(staticPath);
+    reloadServer.server.once("connection", () => {
+        setTimeout(() => {
+            reloadServer.refresh("/");
+        }, 100);
+    });
     app.use(connectLiveReload());
 }
