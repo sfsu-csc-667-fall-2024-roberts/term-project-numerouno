@@ -10,9 +10,8 @@ import livereload from "livereload"
 
 import { timeMiddleware } from "./middleware/time";
 
-import rootRoutes from "./routes/root";
-import { configureLiveReload } from "./config";
-import { stat } from "fs";
+import * as routes from "./routes";
+import configureLiveReload from "./config/livereload";
 
 dotenv.config();
 
@@ -35,7 +34,14 @@ app.set(
     path.join(process.cwd(), "src", "server", "views")
 );
 app.set("view engine", "ejs");
-app.use("/", rootRoutes);
+
+app.use("/", routes.root);
+app.use("/game", routes.game);
+app.use("/gamelobby", routes.gamelobby);
+app.use("/login", routes.login);
+app.use("/register", routes.register);
+app.use("/lobby", routes.lobby);
+
 app.use((_request, _response, next) => {
     next(httpErrors(404));
 });
