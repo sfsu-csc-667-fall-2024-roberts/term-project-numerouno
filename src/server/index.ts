@@ -6,12 +6,13 @@ import morgan from "morgan";
 import * as path from "path";
 import connectLiveReload from "connect-livereload";
 import livereload from "livereload"
-import connectLiveReload from "connect-livereload";
-import livereload from "livereload";
+
 
 import { timeMiddleware } from "./middleware/time";
 
 import rootRoutes from "./routes/root";
+import { configureLiveReload } from "./config";
+import { stat } from "fs";
 
 dotenv.config();
 
@@ -46,26 +47,4 @@ app.listen(PORT, () => {
 const staticPath = path.join(process.cwd(), "src", "public");
 app.use(express.static(staticPath));
 
-if (process.env.NODE_ENV === "development") {
-    const reloadServer = livereload.createServer();
-    reloadServer.watch(staticPath);
-    reloadServer.server.once("connection", () => {
-        setTimeout(() => {
-            reloadServer.refresh("/");
-        }, 100);
-    });
-
-    app.use(connectLiveReload());
-}
-const staticPath = path.join(process.cwd(), "src", "public");
-app.use(express.static(staticPath));
-if (process.env.NODE_ENV === "development") {
-    const reloadServer = livereload.createServer();
-    reloadServer.watch(staticPath);
-    reloadServer.server.once("connection", () => {
-        setTimeout(() => {
-            reloadServer.refresh("/");
-        }, 100);
-    });
-    app.use(connectLiveReload());
-}
+configureLiveReload(app, staticPath);
