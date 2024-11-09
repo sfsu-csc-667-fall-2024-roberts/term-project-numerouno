@@ -9,7 +9,7 @@ import livereload from "livereload";
 
 import { timeMiddleware } from "./middleware/time";
 
-import rootRoutes from "./routes/root";
+import * as routes from "./routes";
 
 dotenv.config();
 
@@ -32,7 +32,13 @@ app.set(
     path.join(process.cwd(), "src", "server", "views")
 );
 app.set("view engine", "ejs");
-app.use("/", rootRoutes);
+
+app.use("/", routes.root);
+app.use("/games", routes.games);
+app.use("/login", routes.login);
+app.use("/register", routes.register);
+app.use("/lobby", routes.lobby);    
+
 app.use((_request, _response, next) => {
     next(httpErrors(404));
     });
