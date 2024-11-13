@@ -11,7 +11,7 @@ import livereload from "livereload"
 import { timeMiddleware } from "./middleware/time";
 
 import * as routes from "./routes";
-import configureLiveReload from "./config/livereload";
+import * as configuration from "./config";
 
 dotenv.config();
 
@@ -53,4 +53,4 @@ app.listen(PORT, () => {
 const staticPath = path.join(process.cwd(), "src", "public");
 app.use(express.static(staticPath));
 
-configureLiveReload(app, staticPath);
+configuration.configureLiveReload(app, staticPath);
