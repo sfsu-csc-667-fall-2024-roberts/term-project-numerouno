@@ -16,7 +16,7 @@
   \****************************/
 /***/ (() => {
 
-eval("\nconsole.log(\"Hello from a bundled asset.\");\nconsole.log(\"dwadsadsaddwadasdsadsadsawadsadd\");\nconsole.log(\"dfffffffffffffsadd\");\n\n\n//# sourceURL=webpack://team-alpha-uno/./src/client/main.ts?");
+eval("\nconsole.log(\"Hello from a bundled asset.\");\n\n\n//# sourceURL=webpack://team-alpha-uno/./src/client/main.ts?");
 
 /***/ })
 

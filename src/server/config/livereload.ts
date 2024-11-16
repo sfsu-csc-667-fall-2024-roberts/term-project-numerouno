@@ -4,7 +4,7 @@ import type { Express } from "express"
 
 
 const configureLiveReload = (app: Express, staticPath: string) => {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV as string === "development") {
         const reloadServer = livereload.createServer();
 
         reloadServer.watch(staticPath);

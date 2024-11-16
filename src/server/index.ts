@@ -4,16 +4,17 @@ import express from "express";
 import httpErrors from "http-errors";
 import morgan from "morgan";
 import * as path from "path";
+
+
+dotenv.config();
+
 import connectLiveReload from "connect-livereload";
-import livereload from "livereload"
+import livereload from "livereload";
 
-
-import { timeMiddleware } from "./middleware/time";
-
+import * as middleware from "./middleware";
 import * as routes from "./routes";
 import * as configuration from "./config";
 
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,7 +26,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(process.cwd(), "src",
     "public")));
 app.use(cookieParser());
-app.use(timeMiddleware);
 app.use(
     express.static(path.join(process.cwd(), "src", "public"))
 );
@@ -37,13 +37,11 @@ app.set(
 app.set("view engine", "ejs");
 
 
-
 app.use("/", routes.root);
-app.use("/game", routes.game);
-app.use("/gamelobby", routes.gamelobby);
-app.use("/login", routes.login);
-app.use("/register", routes.register);
-app.use("/lobby", routes.lobby);
+app.use("/lobby", middleware.authentication, routes.mainLobby);
+app.use("/auth", routes.auth);
+app.use("/games", middleware.authentication, routes.game);
+
 
 app.use((_request, _response, next) => {
     next(httpErrors(404));
@@ -58,3 +56,4 @@ const staticPath = path.join(process.cwd(), "src", "public");
 app.use(express.static(staticPath));
 
 configuration.configureLiveReload(app, staticPath);
+configuration.configureSession(app);

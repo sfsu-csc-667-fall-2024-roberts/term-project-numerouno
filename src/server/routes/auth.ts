@@ -1,4 +1,5 @@
 import express from "express";
+import { Users } from "../db";
 
 
 
@@ -12,5 +13,33 @@ router.get("/login", (_request, response) => {
     response.render("auth/login", { title: "Auth: Logout" });
 });
 
+
+router.post("/register", async (request, response) => {
+    const { username, email, password } = request.body;
+    try {
+        const user = await Users.register(username, email, password);
+        response.redirect("/lobby");
+    } catch (error) {
+        console.error(error);
+        response.redirect("/auth/register");
+    }
+});
+
+router.post("/login", async (request, response) => {
+    const { email, password } = request.body;
+    try {
+        const user = await Users.login(email, password);
+        response.redirect("/lobby");
+    } catch (error) {
+        console.error(error);
+        response.redirect("/auth/login");
+    }
+});
+
+router.get("/logout", (request, response) => {
+    request.session.destroy(() => {
+        response.redirect("/");
+    });
+});
 
 export default router;
