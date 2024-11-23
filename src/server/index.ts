@@ -41,6 +41,7 @@ app.use("/", routes.root);
 app.use("/lobby", middleware.authentication, routes.mainLobby);
 app.use("/auth", routes.auth);
 app.use("/games", middleware.authentication, routes.game);
+app.use("/games", middleware.authentication, routes.game);
 
 
 app.use((_request, _response, next) => {
