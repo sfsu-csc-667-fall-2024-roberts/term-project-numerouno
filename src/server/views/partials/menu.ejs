@@ -1,43 +1,58 @@
 <nav>
-  <ul>
-    <li>
-      Home
-      <ul>
-        <li><a href="/">Home</a></li>
-      </ul>
-    </li>
-    <li>
-      Main Lobby
-      <ul>
-        <li><a href="/lobby">Main Lobby</a></li>
-      </ul>
-    </li>
-    <li>
-      Game Lobby
-      <ul>
-        <li><a href="/games/gamelobby">Game lobby</a></li>
-      </ul>
-    </li>
-    <li>
-      Game Page
-      <ul>
-        <li><a href="/games/game">Game Page</a></li>
-      </ul>
-    </li>
-    <li>
-      Registration
-      <ul>
-        <li><a href="/auth/register">Register</a></li>
-        <li><a href="/auth/login">Login</a></li>
-      </ul>
-    </li>
-  </ul>
-  <% if(locals.user !== undefined) { %>
-  <div class="flex flex-row items-center">
-    <a href="/auth/logout">Logout</a>
-    <img src="https://gravatar.com/avatar/<%= locals.user.gravatar %>"
-      alt="Gravatar of <%= locals.user.username %>"
-      class="w-[40px] h-[40px] rounded-[20px] ml-[10px]" />
-  </div>
-  <% } %>
+    <ul class="menu">
+        <li><a href="/" class="menu-btn">Home</a></li>
+        <li><a href="/lobby" class="menu-btn">Main Lobby</a></li>
+        <li><a href="/games/gamelobby" class="menu-btn">Game Lobby</a></li>
+        <li><a href="/games/game" class="menu-btn">Game Page</a></li>
+        <li><a href="/auth/register" class="menu-btn">Register</a></li>
+        <li><a href="/auth/login" class="menu-btn">Login</a></li>
+    </ul>
+
+    <% if (locals.user !==undefined) { %>
+        <div class="flex flex-row items-center">
+            <a href="/auth/logout" class="menu-btn">Logout</a>
+            <img src="https://gravatar.com/avatar/<%= locals.user.gravatar %>"
+                alt="Gravatar of <%= locals.user.username %>" class="w-[40px] h-[40px] rounded-[20px] ml-[10px]" />
+        </div>
+        <% } %>
 </nav>
+
+<!-- Styling for the menu buttons -->
+<style>
+    /* Basic styling for the menu container */
+    .menu {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        /* This makes the list items appear in a row */
+    }
+
+    /* Styling for each button (menu item) */
+    .menu-btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 8px;
+        margin: 5px;
+        display: inline-block;
+    }
+
+    /* Hover effect for buttons */
+    .menu-btn:hover {
+        background-color: #2563eb;
+        /* Blue color when hovering */
+    }
+
+    /* User section (if logged in) */
+    .flex {
+        display: flex;
+        align-items: center;
+    }
+
+    .flex img {
+        margin-left: 10px;
+    }
+</style>
