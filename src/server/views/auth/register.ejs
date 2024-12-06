@@ -1,40 +1,119 @@
 <!doctype html>
 <html>
 
-    <body>
-        <p><%- include('../partials/menu') %></p>
+<head>
+    <style>
+        .menu{
+            width: 100%;
+            background: #1f2937; /*menu background*/
+            color: white;
+            padding: 3rem;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center; /* Center form horizontally */
+            justify-content: flex-start; /* Menu stays at the top */
+            height: 100vh;
+            background-color: #353941; /* Light background */
+        }
+
+        section {
+            background: #ffffff; /*card background */
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 4rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333333;
+        }
+
+        form div {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333333;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            /* Light border */
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: #3b82f6;
+            /* Blue border on focus */
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+            /* Blue focus ring */
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #3b82f6;
+            /* Blue button */
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2563eb;
+            /* Darker blue on hover */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu">
+        <%- include('../partials/menu') %>
+    </div>
         <section>
             <h1>Register</h1>
             <form method="post" action="/auth/register">
                 <div>
                     <label for="username">Username</label>
-                    <input type="username"
-                        id="username"
-                        name="username"
-                        placeholder="Choose your username"
-                        required />
+                    <input type="text" id="username" name="username" placeholder="Choose your username" required />
                 </div>
                 <div>
                     <label for="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="you@domain.com"
-                        required />
+                    <input type="email" id="email" name="email" placeholder="you@domain.com" required />
                 </div>
                 <div>
                     <label for="password">Password</label>
-                    <input type="password"
-                        id="password"
-                        name="password"
-                        required />
+                    <input type="password" id="password" name="password" required />
                 </div>
                 <div>
                     <button type="submit">Register</button>
                 </div>
             </form>
         </section>
-    </body>
+</body>
 
 </html>
