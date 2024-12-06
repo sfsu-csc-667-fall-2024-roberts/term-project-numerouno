@@ -1,2 +1,4 @@
+import { io } from "socket.io-client";
 
-console.log("Hello from a bundled asset.");
+// @ts-expect-error TODO: Define the socket object on window for TS
+window.socket = io();

@@ -1,13 +1,19 @@
 <!doctype html>
 <html lang="en">
+  <%- include('partials/head') %>
   <body>
     <div class="container mx-auto">
       <%- include('partials/menu') %>
       <section>
-        <h1>Welcome</h1>
+        <h1>Welcome <%= user.username %></h1>
         <p>
           Main lobby
         </p>
+        <image
+          src="https://gravatar.com/avatar/<%= user.gravatar %>"
+          alt="Gravater of <%= user.username %>" />
       </section>
+      <div class="basis-2/6"><%- include('partials/chat') %></div>
+
     </body>
   </html>

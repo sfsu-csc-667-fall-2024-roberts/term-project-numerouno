@@ -1,0 +1,17 @@
+<template id="chat-message-template">
+    <li class="chat-message flex flex-row items-center">
+        <img
+            class="gravatar w-[16px] h-[16px] rounded-[8px] mr-[4px] self-start" />
+        <span class="content text-[8px] text-gray-700"></span>
+    </li>
+</template>
+
+<aside id="chat-section">
+    <ul id="messages">
+    </ul>
+    <form action="/chat/<%= roomId %>" method="post">
+        <input id="chat-message" autocomplete="off" />
+        <button type="submit">Send</button>
+    </form>
+</aside>
+<script src="/js/chat.js"></script>
