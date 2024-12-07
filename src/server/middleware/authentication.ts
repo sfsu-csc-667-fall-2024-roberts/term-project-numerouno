@@ -10,7 +10,7 @@ const authenticationMiddleware = (
 ) => {
     // @ts-expect-error TODO: Define the session type for the user object
     if (!request.session || !request.session.user) {
-        response.redirect("/");
+        response.redirect("/auth/login");
     } else {
         // @ts-expect-error TODO: Define the session type for the user object
         console.log(request.session.user);

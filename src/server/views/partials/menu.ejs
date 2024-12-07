@@ -9,12 +9,10 @@
     </ul>
 
     <% if (locals.user !==undefined) { %>
-        <div class="flex flex-row items-center">
-            <a href="/auth/logout" class="menu-btn">Logout</a>
-            <img src="https://gravatar.com/avatar/<%= locals.user.gravatar %>"
-                alt="Gravatar of <%= locals.user.username %>" class="w-[40px] h-[40px] rounded-[20px] ml-[10px]" />
-        </div>
-        <% } %>
+    <div class="flex flex-row items-center">
+        <a href="/auth/logout" class="menu-btn">Logout</a>
+    </div>
+    <% } %>
 </nav>
 
 <!-- Styling for the menu buttons -->
