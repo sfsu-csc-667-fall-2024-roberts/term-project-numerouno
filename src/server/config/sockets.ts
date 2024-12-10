@@ -5,10 +5,24 @@ import { Server as SocketIoServer, Socket } from "socket.io";
 
 let io: SocketIoServer | undefined;
 
-const bindSession = (socket: Socket) => {
+const bindSession = async (socket: Socket) => {
     const { request } = socket;
-    // @ts-expect-error TODO figure out the typing for session on request
-    socket.join(request.session.id);
+
+    const {
+        user: { id: userId },
+        roomId,
+        // @ts-expect-error TODO figure out the typing for session on request
+    } = request.session;
+
+    if (!userId || !roomId) {
+        socket.disconnect();
+        return;
+    }
+
+    socket.join(`game-${roomId}-user-${userId}`);
+    socket.join(`chat-${roomId}`);
+    socket.join(`game-${roomId}`);
+
     socket.use((_, next) => {
         // @ts-expect-error TODO figure out the typing for session on request
         request.session.reload((error) => {
@@ -27,21 +41,23 @@ export default function (
     sessionMiddleware: RequestHandler,
 ): SocketIoServer {
     if (io === undefined) {
-
         io = new SocketIoServer(server);
 
         app.set("io", io);
         io.engine.use(sessionMiddleware);
 
-        io.on("connection", (socket) => {
-            bindSession(socket);
+        io.on("connection", async (socket) => {
+            await bindSession(socket);
+
             // @ts-expect-error TODO figure out the typing for session on request
             console.log(`client connected (${socket.request.session.id})`);
+
             socket.on("disconnect", () => {
                 // @ts-expect-error TODO figure out the typing for session on request
                 console.log(`client disconnected (${socket.request.session.id})`);
             });
         });
     }
+
     return io;
 }

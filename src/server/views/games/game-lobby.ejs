@@ -1,15 +1,21 @@
 <!doctype html>
 <html lang="en">
 
-<head>
-    <h1>
-        <%= title %>
-    </h1>
-</head>
-
-<body>
-    <p><%- include('../partials/menu') %></p>
-    <p>Game Lobby</p>
-</body>
+    <body>
+        <%- include ('../partials/head') %>
+        <div class="container mx-auto">
+            <%- include('../partials/menu') %>
+            <section>
+                <div class="flex flex-row">
+                    <section class="basis-4/6 mr-[20px]">
+                        Lobby page for game <%= gameId %>
+                    </section>
+                    <div class="basis-2/6"><%-
+                        include('../partials/chat')%></div>
+                </div>
+            </section>
+            <script src="/js/game-lobby.js"></script>
+        </div>
+    </body>
 
 </html>

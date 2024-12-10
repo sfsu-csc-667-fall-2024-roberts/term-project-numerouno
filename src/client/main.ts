@@ -1,4 +1,12 @@
-import { io } from "socket.io-client";
 
-// @ts-expect-error TODO: Define the socket object on window for TS
+import { io, Socket } from "socket.io-client";
+
+
+declare global {
+    interface Window {
+        socket: Socket;
+        roomId: number;
+    }
+}
+
 window.socket = io();

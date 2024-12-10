@@ -1,0 +1,89 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.players {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.player {
+    border: 2px solid #333;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    width: 200px;
+    text-align: center;
+}
+
+.player h2 {
+    margin-bottom: 15px;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    width: 50px;
+    height: 80px;
+    border: 2px solid #333;
+    border-radius: 5px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+/* Apply background color based on card value */
+.card[value='0'] {
+    background-color: #ff4c4c; /* Red for 0 */
+    color: white;
+}
+
+.card[value='1'] {
+    background-color: #4caf50; /* Green for 1 */
+    color: white;
+}
+
+.card[value='2'] {
+    background-color: #2196f3; /* Blue for 2 */
+    color: white;
+}
+
+.card[value='3'] {
+    background-color: #ffeb3b; /* Yellow for 3 */
+    color: black;
+}
+
+/* Styles for the card pile */
+.pile-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.pile {
+    width: 60px;
+    height: 90px;
+    border: 3px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <style>
+  <head>
+    <style>
             .menu{
             width: 100%;
             background: #1f2937; /*menu background*/
@@ -10,24 +10,59 @@
             box-sizing: border-box;
         }
         </style>
-    </head>
-  
+  </head>
+  <%- include('partials/head') %>
   <body>
-    <%- include('partials/head') %>
+
     <div class="container mx-auto">
       <%- include('partials/menu') %>
-      <section>
-        <h1>Welcome <%= user.username %></h1>
-        <p>
-          Main lobby
-        </p>
-        <!-- penguinradb47acce3a7 -->
-        <!-- <%= user.gravatar %> -->
-        <image
-          src="https://gravatar.com/avatar/penguinradb47acce3a7"
-          alt="Gravater of <%= user.username %>" />
-      </section>
-      <div class="basis-2/6"><%- include('partials/chat') %></div>
+      <div class="flex flex-row">
+        <section class="basis-4/6 mr-[20px]">
+          <div class="flex flex-row-reverse mb-[20px]">
+            <form method="post" action="/games/create">
+              <button class="bg-blue-200 rounded-sm px-1 border-[1px] border-blue-800">Create a new game room</button>
+            </form>
+          </div>
+          <table class="min-w-full">
+            <thead>
+              <tr>
+                <th class="text-left border-b-[1px] border-gray-400 py-[4px]">Room name</th>
+                <th class="text-left border-b-[1px] border-gray-400 py-[4px]">Players</th>
+                <th class="text-center border-b-[1px] border-gray-400 py-[4px]">Join</th>
+              </tr>
+            </thead>
+            <tbody id="available-games-list">
+              <% locals.availableGames !== undefined && availableGames.forEach((room) => { %>
+                <tr id="game-row-<%= room.id %>">
+                  <td class="border-b-[1px] border-gray-400 py-[4px]">Game <%= room.id %></td>
+                  <td class="border-b-[1px] border-gray-400 py-[4px]"><%= room.players %> / <%= room.player_count %></td>
+                  <td class="text-center border-b-[1px] border-gray-400 py-[4px]">
+                    <form action="/games/join/<%= room.id %>" method="post">
+                      <button class="bg-blue-200 rounded-sm px-1 border-[1px] border-blue-800">Join</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </section>
+        <div class="basis-2/6"><%- include('partials/chat') %></div>
+      </div>
+    </div>
 
+    <template id="game-row-template">
+      <tr>
+        <td class="border-b-[1px] border-gray-400 py-[4px]"></td>
+        <td class="border-b-[1px] border-gray-400 py-[4px]"></td>
+        <td class="text-center border-b-[1px] border-gray-400 py-[4px]">
+          <form action="/join/X" method="post">
+            <button class="bg-blue-200 rounded-sm px-1 border-[1px] border-blue-800">Join</button>
+          </form>
+        </td>
+      </tr>
+    </template>
+      </div>
+
+      <script src="/js/main-lobby.js"></script>
     </body>
   </html>

@@ -1,5 +1,7 @@
 const form = document.querySelector<HTMLFormElement>("#chat-section form")!;
 const input = document.querySelector<HTMLInputElement>("input#chat-message")!;
+const messageArea =
+    document.querySelector<HTMLUListElement>("#chat-section ul")!;
 const messageTemplate = document.querySelector(
     "#chat-message-template",
 )! as HTMLTemplateElement;
@@ -16,23 +18,26 @@ form.addEventListener('submit', (e) => {
     const message = input.value;
     input.value = '';
 
-    fetch(form.action, {
-        method: 'POST',
+    if (message === '') {
+        return; // Prevent further execution if empty
+    }
+
+    fetch(`/chat/${window.roomId}`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message })
-    })
-        .then(response => {
-            if (response.status !== 200) {
-                console.error('Error', response);
-            }
-        })
+        body: JSON.stringify({ message }),
+    }).then((response) => {
+        if (response.status !== 200) {
+            console.error("Error:", response);
+        }
+    });
+
 });
 
 // IIFE
 (() => {
-    // @ts-expect-error TODO: Define the socket object on window for TS
     window.socket.on(
-        "message:0",
+        `message:${window.roomId}`,
         ({
             message,
             sender,
@@ -46,13 +51,16 @@ form.addEventListener('submit', (e) => {
             const messageElement = messageTemplate.content.cloneNode(
                 true,
             ) as HTMLElement;
+
+            // change to username
             messageElement.querySelector("img")!.src =
-                `https://www.gravitar.com/avatar/${gravatar}?s=10`;
+                `https://www.gravitar.com/avatar/${gravatar}`;
             messageElement.querySelector("img")!.alt = sender;
             messageElement.querySelector("span")!.textContent = message;
 
 
-            document.querySelector("#chat-section ul")!.appendChild(messageElement);
+            messageArea.appendChild(messageElement);
+            messageArea.scrollTo(0, messageArea.scrollHeight);
         },
     );
 })();

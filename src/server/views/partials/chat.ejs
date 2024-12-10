@@ -9,10 +9,10 @@
     </li>
 </template>
 
-<aside id="chat-section">
+<aside id="chat-section" class="h-[300px] flex flex-col">
     <ul id="messages">
     </ul>
-    <form action="/chat/<%= roomId %>" method="post">
+    <form method="post" class="flex flex-row h-[20px] mt-[8px]">
         <input id="chat-message" autocomplete="off" />
         <button type="submit">Send</button>
     </form>

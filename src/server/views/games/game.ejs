@@ -1,15 +1,56 @@
 <!doctype html>
 <html lang="en">
+    <%- include ('../partials/head') %>
+    <body class="text-[12px]">
+        <div class="container mx-auto">
+            <%- include('../partials/menu') %>
 
-    <head>
-        <h1>
-            <%= title %>
-        </h1>
-    </head>
+            <!-- Card Pile -->
+            <div class="pile-container">
+                <h2>Card Pile</h2>
+                <div class="pile">
+                    <div class="card" value="2">2</div> <!-- Blue 2 card -->
+                </div>
+            </div>
 
-    <body>
-        <p><%- include('../partials/menu') %></p>
-        <p>Game Pagestuff</p>
+            <div class="players">
+                <!-- Player 1 -->
+                <div class="player">
+                    <h2>Player 1</h2>
+                    <div class="cards">
+                        <div class="card" value="0">+2</div>
+                        <!-- Red card -->
+                        <div class="card" value="1">1</div> <!-- Green card -->
+                        <div class="card" value="2">2</div> <!-- Blue card -->
+                        <div class="card" value="3">3</div> <!-- Yellow card -->
+                    </div>
+                </div>
+
+                <!-- Player 2 -->
+                <div class="player">
+                    <h2>Player 2</h2>
+                    <div class="cards">
+                        <div class="card" value="0">0</div> <!-- Red card -->
+                        <div class="card" value="1">1</div> <!-- Green card -->
+                        <div class="card" value="2">2</div> <!-- Blue card -->
+                        <div class="card" value="3">3</div> <!-- Yellow card -->
+                    </div>
+                </div>
+
+                <!-- Player 3 -->
+                <div class="player">
+                    <h2>Player 3</h2>
+                    <div class="cards">
+                        <div class="card" value="0">0</div> <!-- Red card -->
+                        <div class="card" value="1">1</div> <!-- Green card -->
+                        <div class="card" value="2">2</div> <!-- Blue card -->
+                        <div class="card" value="3">3</div> <!-- Yellow card -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="basis-2/6"><%- include('../partials/chat') %></div>
     </body>
 
 </html>
