@@ -47,7 +47,7 @@ form.addEventListener('submit', (e) => {
                 true,
             ) as HTMLElement;
             messageElement.querySelector("img")!.src =
-                `https://www.gravatar.com/avatar/${gravatar}?s=10`;
+                `https://www.gravitar.com/avatar/${gravatar}?s=10`;
             messageElement.querySelector("img")!.alt = sender;
             messageElement.querySelector("span")!.textContent = message;
 
