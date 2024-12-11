@@ -15,7 +15,7 @@
 
                     <!-- Game Listing Section -->
                     <section class="game-list">
-                        <h1 class="text-2xl font-bold mb-4 text-center">Game Lobby</h1>
+                        <h1 class="text-2xl font-bold mb-4 text-center">Main Lobby</h1>
 
                         <!-- Games Table -->
                         <div class="mt-6 border border-gray-300 rounded-lg p-4">
@@ -68,7 +68,7 @@
                                             </form>
                                         </td>
                                     </tr>
-                                    
+
                                     <!-- Actual game rooms -->
                                     <% locals.availableGames !==undefined && availableGames.forEach((room)=> { %>
                                         <tr id="game-row-<%= room.id %>">
@@ -93,8 +93,6 @@
                     <!-- Chat Section -->
                     <aside class="chat-box bg-gray-50 border border-gray-300 rounded-lg p-4 chat-section flex flex-col">
                         <h2 class="text-xl font-semibold mb-4 text-center">Chat</h2>
-
-                        <!-- Input Area -->
                         <div class="basis-2/6"><%- include('partials/chat') %></div>
                     </aside>
 

@@ -1,21 +1,64 @@
 <!doctype html>
 <html lang="en">
 
-    <body>
-        <%- include ('../partials/head') %>
-        <div class="container mx-auto">
-            <%- include('../partials/menu') %>
-            <section>
-                <div class="flex flex-row">
-                    <section class="basis-4/6 mr-[20px]">
-                        Lobby page for game <%= gameId %>
-                    </section>
-                    <div class="basis-2/6"><%-
-                        include('../partials/chat')%></div>
-                </div>
-            </section>
-            <script src="/js/game-lobby.js"></script>
-        </div>
-    </body>
+<head>
+    <%- include ('../partials/head') %>
+    <link rel="stylesheet" href="../../css/main-lobby.css">
+</head>
 
+<body class="bg-gray-100 font-sans leading-normal">
+    <div class="container mx-auto px-4 py-6">
+        <%- include('../partials/menu') %>
+
+            <section class="bg-white shadow-md rounded-lg p-6">
+                <div class="lobby-container">
+
+                    <section class="game-list">
+                        <!-- Table -->
+                        <div class="mt-6 border border-gray-300 rounded-lg p-4">
+                            <h2 class="text-xl font-semibold mb-4 text-center">Game #<%= gameId %> Lobby</h2>
+                            <table>
+                                <thead class="min-w-full">
+                                    <tr>
+                                        <th>Players</th>
+                                        <th>Ready</th>
+                                    </tr>
+                                </thead>
+
+                                    <!-- Hardcoded players for testing -->
+                                    <tr id="game-row-1">
+                                        <td class="border-b-[1px] border-gray-400 py-[4px]">Player 1</td>
+                                        <td class="border-b-[1px] border-gray-400 py-[4px]">Yes</td>
+                                        <td class="text-center border-b-[1px] border-gray-400 py-[4px]">
+                                        </td>
+                                    </tr>
+
+                                    <!-- Hardcoded players for testing -->
+                                    <tr id="game-row-1">
+                                        <td class="border-b-[1px] border-gray-400 py-[4px]">Player 2</td>
+                                        <td class="border-b-[1px] border-gray-400 py-[4px]">No</td>
+                                        <td class="text-center border-b-[1px] border-gray-400 py-[4px]">
+                                        </td>
+                                    </tr>
+
+                                    <!-- Hardcoded players for testing -->
+                                    <tr id="game-row-1">
+                                        <td class="border-b-[1px] border-gray-400 py-[4px]">Player 3</td>
+                                        <td class="border-b-[1px] border-gray-400 py-[4px]">Yes</td>
+                                        <td class="text-center border-b-[1px] border-gray-400 py-[4px]">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Chat Section -->
+                    <aside class="chat-box bg-gray-50 border border-gray-300 rounded-lg p-4 chat-section flex flex-col">
+                        <h2 class="text-xl font-semibold mb-4 text-center">Chat</h2>
+                        <div class="basis-2/6"><%- include('../partials/chat') %></div>
+                    </aside>
+                    <script src="/js/game-lobby.js"></script>
+                </div>
+</body>
 </html>
