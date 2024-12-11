@@ -3,7 +3,7 @@
 
 <head>
     <%- include ('partials/head') %>
-        <link rel="stylesheet" href="../css/main-lobby.css">
+    <link rel="stylesheet" href="../css/main-lobby.css">
 </head>
 
 
@@ -13,6 +13,7 @@
 
             <section class="bg-white shadow-md rounded-lg p-6">
                 <div class="lobby-container">
+                    
                     <!-- Game Listing Section -->
                     <section class="game-list">
                         <h1 class="text-2xl font-bold mb-4 text-center">Game Lobby</h1>
@@ -20,6 +21,9 @@
                         <!-- Games Table -->
                         <div class="mt-6 border border-gray-300 rounded-lg p-4">
                             <h2 class="text-xl font-semibold mb-4 text-center">Ongoing Games</h2>
+                            <form method="post" action="/games/create">
+                                <button class="bg-blue-200 rounded-sm px-1 border-[1px] border-blue-800">Create a new game room</button>
+                            </form>
                             <table>
                                 <thead>
                                     <tr>
@@ -63,6 +67,18 @@
                         <!-- Input Area -->
                         <div class="basis-2/6"><%- include('partials/chat') %></div>
                     </aside>
+                    
+                    <template id="game-row-template">
+                        <tr>
+                          <td class="border-b-[1px] border-gray-400 py-[4px]"></td>
+                          <td class="border-b-[1px] border-gray-400 py-[4px]"></td>
+                          <td class="text-center border-b-[1px] border-gray-400 py-[4px]">
+                            <form action="/join/X" method="post">
+                              <button class="bg-blue-200 rounded-sm px-1 border-[1px] border-blue-800">Join</button>
+                            </form>
+                          </td>
+                        </tr>
+                      </template>
 
                     <script src="/js/game-lobby.js"></script>
                 </div>
