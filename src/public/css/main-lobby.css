@@ -1,0 +1,46 @@
+.chat-section {
+    height: 100%;
+    overflow-y: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+th {
+    background-color: #f3f3f3;
+    font-weight: bold;
+}
+
+.lobby-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.game-list {
+    flex: 2;
+}
+
+.chat-box {
+    flex: 1;
+    max-width: 400px;
+    flex-direction: column;
+    height: 100%;
+}
