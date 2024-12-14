@@ -16,7 +16,7 @@
   \**********************************/
 /***/ (() => {
 
-eval("\n// TODO jrob fix this plox\nwindow.socket.on(\"game-starting\", () => {\n    window.location.href = `/games/${window.roomId}`;\n});\nwindow.socket.on(\"player-joined\", ({ username, email, gravatar }) => {\n    console.log(\"Player joined!\", { username, email, gravatar });\n});\n\n\n//# sourceURL=webpack://team-alpha-uno/./src/client/game-lobby.ts?");
+eval("\nconst Players = document.querySelector(\"#player-list\");\nconst playerTemplate = document.querySelector(\"#player-row-template\");\nwindow.socket.on(\"game-starting\", () => {\n    window.location.href = `/games/${window.roomId}`;\n    console.log(\"Starting game!\");\n});\nwindow.socket.on(\"player-joined\", ({ username, email, gravatar }) => {\n    console.log(\"Player joined!\", { username, email, gravatar });\n    const player = playerTemplate.content.cloneNode(true);\n    player.querySelector(\"td:nth-child(1)\").textContent = `${username}`;\n    Players.appendChild(player);\n});\n\n\n//# sourceURL=webpack://team-alpha-uno/./src/client/game-lobby.ts?");
 
 /***/ })
 

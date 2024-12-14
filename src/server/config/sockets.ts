@@ -1,30 +1,42 @@
 import { Server } from "http";
 import { Express, RequestHandler } from "express";
 import { Server as SocketIoServer, Socket } from "socket.io";
+import { Session } from "express-session";
 
+interface CustomSession extends Session {
+    user?: {
+
+        id?: string;
+    };
+    roomId?: string;
+}
+
+interface CustomSocketRequest extends Request {
+    session: CustomSession;
+}
 
 let io: SocketIoServer | undefined;
 
 const bindSession = async (socket: Socket) => {
-    const { request } = socket;
+    const request = socket.request as unknown as CustomSocketRequest;;
 
-    const {
-        user: { id: userId },
-        roomId,
-        // @ts-expect-error TODO figure out the typing for session on request
-    } = request.session;
-
-    if (!userId || !roomId) {
+    if (!request.session) {
+        console.error("Session is undefined");
         socket.disconnect();
         return;
     }
 
-    socket.join(`game-${roomId}-user-${userId}`);
+    const userId = request.session?.user?.id; // Safely access user.id if session and session.user exist
+    const roomId = request.session?.roomId;
+
+
+
+    socket.join(`user-${userId}`);
     socket.join(`chat-${roomId}`);
     socket.join(`game-${roomId}`);
 
+
     socket.use((_, next) => {
-        // @ts-expect-error TODO figure out the typing for session on request
         request.session.reload((error) => {
             if (error) {
                 socket.disconnect();
@@ -48,13 +60,11 @@ export default function (
 
         io.on("connection", async (socket) => {
             await bindSession(socket);
-
-            // @ts-expect-error TODO figure out the typing for session on request
-            console.log(`client connected (${socket.request.session.id})`);
+            const request = socket.request as unknown as CustomSocketRequest;
+            console.log(`client connected (${request.session?.id})`);
 
             socket.on("disconnect", () => {
-                // @ts-expect-error TODO figure out the typing for session on request
-                console.log(`client disconnected (${socket.request.session.id})`);
+                console.log(`client disconnected (${request.session.id})`);
             });
         });
     }

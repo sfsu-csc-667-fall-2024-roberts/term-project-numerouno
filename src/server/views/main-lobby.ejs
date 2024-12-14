@@ -1,27 +1,32 @@
 <!doctype html>
 <html lang="en">
 
-<head>
-    <%- include ('partials/head') %>
+    <head>
+        <%- include ('partials/head') %>
         <link rel="stylesheet" href="../css/main-lobby.css">
-</head>
+    </head>
 
-<body class="bg-gray-100 font-sans leading-normal">
-    <div class="container mx-auto px-4 py-6">
-        <%- include('partials/menu') %>
+    <body class="bg-gray-100 font-sans leading-normal">
+        <div class="container mx-auto px-4 py-6">
+            <%- include('partials/menu') %>
 
             <section class="bg-white shadow-md rounded-lg p-6">
                 <div class="lobby-container">
 
                     <!-- Game Listing Section -->
                     <section class="game-list">
-                        <h1 class="text-2xl font-bold mb-4 text-center">Main Lobby</h1>
+                        <h1 class="text-2xl font-bold mb-4 text-center">Main
+                            Lobby</h1>
 
                         <!-- Games Table -->
                         <div class="mt-6 border border-gray-300 rounded-lg p-4">
-                            <h2 class="text-xl font-semibold mb-4 text-center">Ongoing Games</h2>
+                            <h2
+                                class="text-xl font-semibold mb-4 text-center">Ongoing
+                                Games</h2>
                             <form method="post" action="/games/create">
-                                <button class="bg-blue-200 rounded-sm px-1 border-[1px] border-blue-800">Create a new game room</button>
+                                <button
+                                    class="bg-blue-200 rounded-sm px-1 border-[1px] border-blue-800">Create
+                                    a new game room</button>
                             </form>
                             <table>
                                 <thead class="min-w-full">
@@ -34,7 +39,7 @@
                                 <tbody id="available-games-list">
 
                                     <!-- Hardcoded game rooms for testing -->
-                                    <tr id="game-row-1">
+                                    <!-- <tr id="game-row-1">
                                         <td class="border-b-[1px] border-gray-400 py-[4px]">Game 1</td>
                                         <td class="border-b-[1px] border-gray-400 py-[4px]">2 / 4</td>
                                         <td class="text-center border-b-[1px] border-gray-400 py-[4px]">
@@ -45,7 +50,7 @@
                                         </td>
                                     </tr>
 
-                                    <!-- Hardcoded game rooms for testing -->
+                              
                                     <tr id="game-row-1">
                                         <td class="border-b-[1px] border-gray-400 py-[4px]">Game 2</td>
                                         <td class="border-b-[1px] border-gray-400 py-[4px]">2 / 4</td>
@@ -57,7 +62,7 @@
                                         </td>
                                     </tr>
 
-                                    <!-- Hardcoded game rooms for testing -->
+           
                                     <tr id="game-row-1">
                                         <td class="border-b-[1px] border-gray-400 py-[4px]">Game 3</td>
                                         <td class="border-b-[1px] border-gray-400 py-[4px]">4 / 4</td>
@@ -67,40 +72,54 @@
                                                     class="bg-blue-200 rounded-sm px-1 border-[1px] border-blue-800">Join</button>
                                             </form>
                                         </td>
-                                    </tr>
+                                    </tr> -->
 
                                     <!-- Actual game rooms -->
-                                    <% locals.availableGames !==undefined && availableGames.forEach((room)=> { %>
-                                        <tr id="game-row-<%= room.id %>">
-                                            <td class="border-b-[1px] border-gray-400 py-[4px]">Game <%= room.id %>
-                                            </td>
-                                            <td class="border-b-[1px] border-gray-400 py-[4px]">
-                                                <%= room.players %> / <%= room.player_count %>
-                                            </td>
-                                            <td class="text-center border-b-[1px] border-gray-400 py-[4px]">
-                                                <form action="/games/join/<%= room.id %>" method="post">
-                                                    <button
-                                                        class="bg-blue-200 rounded-sm px-1 border-[1px] border-blue-800">Join</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        <% }); %>
+                                    <% locals.availableGames !== undefined &&
+                                    availableGames.forEach((room)=> { %>
+                                    <tr id="game-row-<%= room.id %>">
+                                        <td
+                                            class="border-b-[1px] border-gray-400 py-[4px]">Game
+                                            <%= room.id %>
+                                        </td>
+                                        <td
+                                            class="border-b-[1px] border-gray-400 py-[4px]">
+                                            <%= room.players %> / <%=
+                                            room.player_count %>
+                                        </td>
+                                        <td
+                                            class="text-center border-b-[1px] border-gray-400 py-[4px]">
+                                            <form
+                                                action="/games/join/<%= room.id %>"
+                                                method="post">
+                                                <button
+                                                    class="bg-blue-200 rounded-sm px-1 border-[1px] border-blue-800">Join</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
                                 </tbody>
                             </table>
                         </div>
                     </section>
 
                     <!-- Chat Section -->
-                    <aside class="chat-box bg-gray-50 border border-gray-300 rounded-lg p-4 chat-section flex flex-col">
-                        <h2 class="text-xl font-semibold mb-4 text-center">Chat</h2>
-                        <div class="basis-2/6"><%- include('partials/chat') %></div>
+                    <aside
+                        class="chat-box bg-gray-50 border border-gray-300 rounded-lg p-4 chat-section flex flex-col">
+                        <h2
+                            class="text-xl font-semibold mb-4 text-center">Chat</h2>
+                        <div class="basis-2/6"><%- include('partials/chat')
+                            %></div>
                     </aside>
 
                     <template id="game-row-template">
                         <tr>
-                            <td class="border-b-[1px] border-gray-400 py-[4px]"></td>
-                            <td class="border-b-[1px] border-gray-400 py-[4px]"></td>
-                            <td class="text-center border-b-[1px] border-gray-400 py-[4px]">
+                            <td
+                                class="border-b-[1px] border-gray-400 py-[4px]"></td>
+                            <td
+                                class="border-b-[1px] border-gray-400 py-[4px]"></td>
+                            <td
+                                class="text-center border-b-[1px] border-gray-400 py-[4px]">
                                 <form action="/join/X" method="post">
                                     <button
                                         class="bg-blue-200 rounded-sm px-1 border-[1px] border-blue-800">Join</button>
@@ -111,5 +130,5 @@
 
                     <script src="/js/game-lobby.js"></script>
                 </div>
-</body>
-</html>
+            </body>
+        </html>

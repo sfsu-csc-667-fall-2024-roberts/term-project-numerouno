@@ -1,6 +1,6 @@
 
 import db from "../connection";
-import { ADD_PLAYER, AVAILABLE_CARDS_FOR_GAME, AVAILABLE_GAMES, CREATE_GAME, DEAL_CARDS, GET_PLAYER_COUNT, INSERT_INITIAL_CARDS, SHUFFLE_DISCARD_PILE } from "./sql";
+import { ADD_PLAYER, AVAILABLE_CARDS_FOR_GAME, AVAILABLE_GAMES, CREATE_GAME, DEAL_CARDS, GET_GAME_PLAYERS, GET_PLAYER_CARDS, GET_PLAYER_COUNT, INSERT_INITIAL_CARDS, IS_CURRENT, SHUFFLE_DISCARD_PILE } from "./sql";
 
 type GameDescription = {
     id: number;
@@ -22,9 +22,14 @@ const join = async (playerId: number, gameId: number) => {
     return await db.one<GameDescription>(ADD_PLAYER, [gameId, playerId]);
 };
 
-const availableGames = async (limit: number = 10, offset: number = 20) => {
+const availableGames = async (limit: number = 10, offset: number = 0): Promise<
+    {
+        id: number;
+        players: number;
+        currentPlayerIsMember?: boolean;
+    }[]
+> => {
     return db.any(AVAILABLE_GAMES, [limit, offset]);
-
 };
 
 const getPlayerCount = async (gameId: number) => {
@@ -43,12 +48,38 @@ const drawCard = async (playerId: number, gameId: number) => {
 };
 
 // user_id: -1 for top of discard pile, -2 for rest of discard pile
-const playCard = async () =>
-// playerId: number,
-// gameId: number,
-// cardId: string,
-// pile: number
-{ };
+const playCard = async (playerId: number,
+    gameId: number,
+    cardId: string,
+    pile: number) => {
+
+};
+
+const playerGames = async (
+    playerId: number,
+): Promise<Record<number, boolean>> => {
+    return (
+        await db.any("SELECT game_id FROM game_users WHERE user_id=$1", playerId)
+    ).reduce((memo, game) => ({ ...memo, [game.game_id]: true }), {});
+};
+
+const get = async (gameId: number, playerId: number) => {
+    const currentSeat = await db.one(
+        "SELECT current_seat FROM games WHERE id=$1",
+        gameId,
+    );
+    const players = await db.any(GET_GAME_PLAYERS, gameId);
+    const playerHand = await db.any(GET_PLAYER_CARDS, [playerId, gameId, 0, 8]);
+    return {
+        currentSeat,
+        players,
+        playerHand,
+    };
+};
+
+const isCurrentPlayer = async (gameId: number, userId: number) => {
+    return (await db.one(IS_CURRENT, [gameId, userId])).count === "1";
+};
 
 export default {
     create,
@@ -57,4 +88,7 @@ export default {
     getPlayerCount,
     drawCard,
     playCard,
+    playerGames,
+    get,
+    isCurrentPlayer,
 };

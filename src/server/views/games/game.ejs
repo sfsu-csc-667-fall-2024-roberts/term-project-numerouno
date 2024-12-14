@@ -5,11 +5,20 @@
         <div class="container mx-auto">
             <%- include('../partials/menu') %>
 
-            <!-- Card Pile -->
-            <div class="pile-container">
-                <h2>Card Pile</h2>
+            <!-- Card Pile and Draw Pile Container -->
+            <div class="pile-container flex justify-center space-x-8">
+                <!-- Card Pile -->
                 <div class="pile">
+                    <h2>Card Pile</h2>
                     <div class="card" value="2">2</div> <!-- Blue 2 card -->
+                </div>
+
+                <!-- Draw Pile -->
+                <div
+                    class="draw-pile pile-container flex justify-center space-x-8">
+                    <h2>Draw Pile</h2>
+                    <div class="card draw-back">Draw</div>
+                    <!-- Placeholder for draw pile -->
                 </div>
             </div>
 

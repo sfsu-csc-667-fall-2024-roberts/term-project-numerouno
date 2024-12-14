@@ -1,5 +1,6 @@
 import express, { response } from "express";
 import { Games } from "../db";
+import sockets from "../config/sockets";
 
 const router = express.Router();
 
@@ -31,8 +32,9 @@ router.post("/join/:gameId", async (request, response) => {
 
 
     if (playerCount === 3) {
-        response.redirect(`/games/${gameId}`);
         request.app.get("io").to(`game-${gameId}`).emit("game-starting", game);
+
+        response.redirect(`/games/${gameId}`);
     } else {
         response.redirect(`/games/${gameId}/lobby`);
         request.app
@@ -40,7 +42,6 @@ router.post("/join/:gameId", async (request, response) => {
             .to(`game-${gameId}`)
             .emit("player-joined", { username, email, gravatar });
     }
-
 });
 
 router.get("/:gameId", (request, response) => {
