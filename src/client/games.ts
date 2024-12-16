@@ -29,6 +29,6 @@ document.querySelector<HTMLFormElement>("#draw-pile")!
 
 
 //
-document
-    .querySelector<HTMLDivElement>("#playing-table")!
-    .addEventListener("click", cardClickHandler);
+// document
+//     .querySelector<HTMLDivElement>("#playing-table")!
+//     .addEventListener("click", cardClickHandler);

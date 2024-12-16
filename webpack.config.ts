@@ -21,6 +21,9 @@ const config: webpack.Configuration = {
         path: path.join(process.cwd(), "src", "public", "js"),
         filename: "[name].js",
     },
+    resolve: {
+        extensions: [".ts", ".js"],
+    },
     module: {
         rules: [
             {
