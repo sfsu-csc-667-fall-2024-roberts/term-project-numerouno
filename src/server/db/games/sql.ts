@@ -43,8 +43,9 @@ SET user_id = $1 WHERE game_id = $2 AND user_id = 0 AND position IN (
 ) RETURNING card_id`;
 
 export const AVAILABLE_CARDS_FOR_GAME = `
-SELECT COUNT(*) FROM cards WHERE game_id = $1 AND player_id = 0
+SELECT count(*) FROM game_cards WHERE game_id = $1 AND user_id = 0
 `;
+
 export const SHUFFLE_DISCARD_PILE = `
 UPDATE game_cards SET user_id = 0, position = uuid_generate_v4() WHERE user_id = -2 AND game_id = $1
 `;
@@ -90,12 +91,64 @@ WHERE game_cards.user_id=$1
   AND game_cards.card_id=cards.id 
   AND pile=$3
 ORDER BY position DESC
-LIMIT $4;
 `;
 
 export const IS_CURRENT = `
-SELECT COUNT(*)
-FROM game_users, games 
-WHERE games.id = $1 
-  AND game_users.user_id = $2 
-  AND games.current_seat = game_users.seat`;
+  SELECT games.current_seat = game_users.seat AS is_current_player
+    FROM games, game_users
+    WHERE games.id = $1
+    AND game_users.user_id = $2
+    AND game_users.game_id = games.id
+    `;
+
+
+export const LOOKUP_CARD = `
+SELECT * FROM cards WHERE id = $1;
+`;
+
+export const GET_TOP_CARD = `
+SELECT * FROM cards 
+WHERE id =
+(SELECT card_id FROM game_cards WHERE game_id = $1 AND user_id = -1)
+`;
+
+export const SET_TOP_CARD = `
+BEGIN;
+
+-- Remove all top cards for the game 
+UPDATE game_cards
+SET user_id = -2
+ WHERE game_id = $1 AND user_id = -1;
+
+-- Set the new top card 
+UPDATE game_cards
+ SET user_id = -1
+ WHERE card_id = $2 AND game_id = $1
+ RETURNING *;
+
+COMMIT;
+`;
+
+
+export const ALL_PLAYER_DATA = `
+SELECT 
+  users.id, 
+  users.username, 
+  users.gravatar, 
+  game_users.seat,
+  (
+    SELECT games.current_seat = game_users.seat 
+    FROM games, game_users
+    WHERE games.id = $1
+    AND game_users.user_id = users.id
+    AND game_users.game_id = games.id
+  ) AS is_current,
+  (
+    SELECT COUNT(*) 
+    FROM game_cards 
+    WHERE game_cards.user_id = users.id 
+    AND game_cards.game_id = $1
+  ) AS num_cards
+FROM users, game_users
+WHERE users.id = game_users.user_id AND game_users.game_id = $1
+`;

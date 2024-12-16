@@ -15,8 +15,9 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
         },
     });
 
-    // Color constants
+    // Color constants 
     const colors = [0, 1, 2, 3]; // 0: Red, 1: Green, 2: Blue, 3: Yellow
+    // color is 4 (wild) added later
 
     // Card values
     const numberCards = Array.from({ length: 10 }, (_, i) => i); // 0-9 cards

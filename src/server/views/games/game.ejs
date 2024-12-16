@@ -10,14 +10,14 @@
                 <!-- Card Pile -->
                 <div class="pile">
                     <h2>Card Pile</h2>
-                    <div class="card" value="2">2</div> <!-- Blue 2 card -->
+                    <div class="card" value="3">2</div> <!-- Blue 2 card -->
                 </div>
 
                 <!-- Draw Pile -->
-                <div class="draw-pile ">
+                <div class="draw-pile">
                     <h2>Draw Pile</h2>
-                    <div class="card draw-back">Draw</div>
-                    <!-- Placeholder for draw pile -->
+                    <div id="draw-pile" data-game-id="<%= gameId %>"
+                        class="card draw-back">Draw</div>
                 </div>
             </div>
 
@@ -59,6 +59,7 @@
 
         </div>
         <div class="basis-2/6"><%- include('../partials/chat') %></div>
+        <script src="/js/games.js"></script>
     </body>
 
 </html>

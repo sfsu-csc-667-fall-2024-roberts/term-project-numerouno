@@ -1,6 +1,7 @@
 import express, { response } from "express";
 import { Games } from "../db";
 import sockets from "../config/sockets";
+import { broadcastGameUpdate, canPlayerDraw, isPlayersTurn } from "./game-middleware";
 
 const router = express.Router();
 
@@ -14,12 +15,11 @@ router.post("/create", async (request, response) => {
 
 router.post("/join/:gameId", async (request, response) => {
     // @ts-expect-error TODO update session to include user id
-    const { id: user_id, username, email, gravatar } = request.session.user;
+    const { id: userId, username: username } = request.session.user;
     const { gameId } = request.params;
 
     // Validate:
     // - Check to make sure user is not already in this game
-    // - Check to make sure game is not full
     // - Check to make sure password is correct if required
 
     const { count } = await Games.getPlayerCount(parseInt(gameId, 10));
@@ -28,20 +28,54 @@ router.post("/join/:gameId", async (request, response) => {
         response.redirect("/lobby");
         return;
     }
-    const game = await Games.join(user_id, parseInt(gameId, 10));
 
 
-    if (playerCount === 3) {
-        request.app.get("io").to(`game-${gameId}`).emit("game-starting", game);
+    const game = await Games.join(userId, parseInt(gameId, 10));
+
+
+    // if (playerCount === 3) {
+    //     request.app.get("io").to(`game-${gameId}`).emit("game-starting", game);
+
+    //     response.redirect(`/games/${gameId}`);
+    // } else {
+    //     response.redirect(`/games/${gameId}/lobby`);
+    //     request.app
+    //         .get("io")
+    //         .to(`game-${gameId}`)
+    //         .emit("player-joined", { username });
+    // }
+    next();
+},
+    broadcastGameUpdate,
+    (request, response) => {
+        const gameId = parseInt(request.params.gameId, 10);
 
         response.redirect(`/games/${gameId}`);
-    } else {
-        response.redirect(`/games/${gameId}/lobby`);
-        request.app
-            .get("io")
-            .to(`game-${gameId}`)
-            .emit("player-joined", { username, email, gravatar });
-    }
+    },
+
+);
+
+router.post(
+    "/:gameId/draw",
+    isPlayersTurn,
+    canPlayerDraw,
+    async (request, _response, next) => {
+        console.log("hi");
+        const gameId = parseInt(request.params.gameId, 10);
+        const userId = (request.session as any).user?.id;
+        await Games.drawCard(gameId, userId);
+
+        next();
+    },
+    broadcastGameUpdate,
+    (_request, response) => {
+        response.sendStatus(200);
+    },
+
+);
+
+router.get("/:gameId/update", broadcastGameUpdate, (_request, response) => {
+    response.sendStatus(200);
 });
 
 router.get("/:gameId", (request, response) => {
@@ -56,3 +90,7 @@ router.get("/:gameId/lobby", (request, response) => {
 });
 
 export default router;
+
+function next() {
+    throw new Error("Function not implemented.");
+}

@@ -1,6 +1,6 @@
 
 import db from "../connection";
-import { ADD_PLAYER, AVAILABLE_CARDS_FOR_GAME, AVAILABLE_GAMES, CREATE_GAME, DEAL_CARDS, GET_GAME_PLAYERS, GET_PLAYER_CARDS, GET_PLAYER_COUNT, INSERT_INITIAL_CARDS, IS_CURRENT, SHUFFLE_DISCARD_PILE } from "./sql";
+import { ADD_PLAYER, ALL_PLAYER_DATA, AVAILABLE_CARDS_FOR_GAME, AVAILABLE_GAMES, CREATE_GAME, DEAL_CARDS, GET_GAME_PLAYERS, GET_PLAYER_CARDS, GET_PLAYER_COUNT, GET_TOP_CARD, INSERT_INITIAL_CARDS, IS_CURRENT, LOOKUP_CARD, SHUFFLE_DISCARD_PILE } from "./sql";
 
 type GameDescription = {
     id: number;
@@ -36,15 +36,20 @@ const getPlayerCount = async (gameId: number) => {
     return db.one<{ count: string }>(GET_PLAYER_COUNT, gameId);
 };
 
-const drawCard = async (playerId: number, gameId: number) => {
-    const availableCards = parseInt(
-        (await db.one<{ count: string }>(AVAILABLE_CARDS_FOR_GAME, gameId)).count,
-    );
+const drawCard = async (gameId: number, playerId: number) => {
+    // const availableCards = parseInt(
+    //     (await db.one<{ count: string }>(AVAILABLE_CARDS_FOR_GAME, gameId)).count,
+    //     10);
+    const result = await db.one<{ count: string }>(AVAILABLE_CARDS_FOR_GAME, gameId);
+    const availableCards = result?.count ? parseInt(result.count, 10) : 0;
+    //console.log(availableCards);
     if (availableCards === 0) {
+        console.log("I shouldn't see this");
         await db.none(SHUFFLE_DISCARD_PILE, [gameId]);
     }
 
-    return db.one<{ card_id: string }>(DEAL_CARDS, [playerId, gameId, 1]);
+    const card = db.one(DEAL_CARDS, [playerId, gameId, 1]);
+    return card;
 };
 
 // user_id: -1 for top of discard pile, -2 for rest of discard pile
@@ -77,9 +82,60 @@ const get = async (gameId: number, playerId: number) => {
     };
 };
 
+const getPlayers = async (
+    gameId: number,
+): Promise<
+    {
+        gravatar: string;
+        id: number;
+        is_current: boolean;
+        seat: number;
+        username: string;
+        num_cards: number;
+    }[]
+> => {
+    return await db.any(ALL_PLAYER_DATA, [gameId]);
+};
+
 const isCurrentPlayer = async (gameId: number, userId: number) => {
     return (await db.one(IS_CURRENT, [gameId, userId])).count === "1";
 };
+
+// returns true if card is playable
+const playable = async (cardId: number, gameId: number) => {
+    const card = await db.one(LOOKUP_CARD, cardId);
+    const topCard = await db.one(GET_TOP_CARD, gameId);
+
+    const { color: topColor, value: topValue } = topCard;
+    const { color: cardColor, value: cardValue } = card;
+
+    // color 4 is wild
+    if (topColor === cardColor || topValue === cardValue ||
+        topColor === 4 || cardColor === 4) {
+        return true;
+    }
+    return false;
+}
+
+const playableCards = async (gameId: number, userId: number) => {
+    const playerHand = await db.any(GET_PLAYER_CARDS, [userId, gameId, 0, 8]);
+    let num = 0;
+    for (const card of playerHand) {
+        if (await playable(card.card_id, gameId)) {
+            num++;
+        }
+    }
+
+    return num;
+};
+
+const getPlayerHand = async (gameId: number, playerId: number) => {
+    return await db.any(GET_PLAYER_CARDS, [playerId, gameId, 0]);
+};
+
+const getTopCard = async (gameId: number) => {
+    return await db.one(GET_TOP_CARD, gameId);
+}
 
 export default {
     create,
@@ -91,4 +147,8 @@ export default {
     playerGames,
     get,
     isCurrentPlayer,
+    playableCards,
+    getPlayerHand,
+    getPlayers,
+    getTopCard,
 };

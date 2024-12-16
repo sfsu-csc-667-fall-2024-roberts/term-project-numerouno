@@ -11,6 +11,9 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
             type: "integer",
             notNull: true,
         },
+        // for userId
+        // 0 is in draw pile
+        // -2 is bottom of discard and -1 is top card of discard pile
         user_id: {
             type: "integer",
             notNull: true,
