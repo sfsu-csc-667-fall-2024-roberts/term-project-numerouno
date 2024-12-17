@@ -77,19 +77,37 @@ router.get("/:gameId/update", broadcastGameUpdate, (_request, response) => {
     response.sendStatus(200);
 });
 
-router.get("/:gameId", (request, response) => {
-    const { gameId } = request.params;
+// router.get("/:gameId", (request, response) => {
+//     const { gameId } = request.params;
 
-    response.render("games/game", { title: `Game ${gameId}`, gameId });
-});
+//     response.render("games/game", { title: `Game ${gameId}`, gameId });
+// });
 
 router.get("/:gameId/lobby", (request, response) => {
     const { gameId } = request.params;
     response.render("games/game-lobby", { title: "Game lobby", gameId });
 });
 
-export default router;
 
 function next() {
     throw new Error("Function not implemented.");
 }
+
+router.get("/:gameId", async (request, response) => {
+    const { gameId } = request.params;
+
+    try {
+        const cards = await Games.getRandomCard();
+        console.log("Card being passed to EJS:", cards); // Debug output
+        response.render("games/game", { 
+            title: `Game ${gameId}`, 
+            gameId,
+            cards, 
+        });
+    } catch (err) {
+        console.error(err);
+        response.status(500).send("Error loading game or card data");
+    }
+});
+
+export default router;
