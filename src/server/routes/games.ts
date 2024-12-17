@@ -20,7 +20,6 @@ router.post("/join/:gameId", async (request, response) => {
 
     // Validate:
     // - Check to make sure user is not already in this game
-    // - Check to make sure password is correct if required
 
     const { count } = await Games.getPlayerCount(parseInt(gameId, 10));
     const playerCount = parseInt(count, 10);
