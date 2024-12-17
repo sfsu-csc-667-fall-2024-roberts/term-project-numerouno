@@ -64,12 +64,12 @@ router.post(
         const userId = (request.session as any).user?.id;
         await Games.drawCard(gameId, userId);
 
-        next();
+        // next();
     },
-    broadcastGameUpdate,
-    (_request, response) => {
-        response.sendStatus(200);
-    },
+    // broadcastGameUpdate,
+    // (_request, response) => {
+    //     response.sendStatus(200);
+    // },
 
 );
 
@@ -99,10 +99,10 @@ router.get("/:gameId", async (request, response) => {
     try {
         const cards = await Games.getRandomCard();
         console.log("Card being passed to EJS:", cards); // Debug output
-        response.render("games/game", { 
-            title: `Game ${gameId}`, 
+        response.render("games/game", {
+            title: `Game ${gameId}`,
             gameId,
-            cards, 
+            cards,
         });
     } catch (err) {
         console.error(err);

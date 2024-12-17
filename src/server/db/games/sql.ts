@@ -101,9 +101,19 @@ export const IS_CURRENT = `
     AND game_users.game_id = games.id
     `;
 
+export const GET_NEXT_PLAYER = `
+SELECT * FROM game_users WHERE gameid = $1 AND 
+ seat = (SELECT next_seat from games WHERE game_id = $1)
+`;
 
 export const LOOKUP_CARD = `
 SELECT * FROM cards WHERE id = $1;
+`;
+
+export const END_TURN = `
+UPDATE games
+ SET current_seat = $2
+ WHERE game_id = $1;
 `;
 
 export const GET_TOP_CARD = `
@@ -129,6 +139,11 @@ UPDATE game_cards
 COMMIT;
 `;
 
+export const SET_NEXT_SEAT = `
+UPDATE games
+ SET next_seat = $2
+ WHERE game_id = $1
+`;
 
 export const ALL_PLAYER_DATA = `
 SELECT 
@@ -152,3 +167,4 @@ SELECT
 FROM users, game_users
 WHERE users.id = game_users.user_id AND game_users.game_id = $1
 `;
+

@@ -1,6 +1,6 @@
 
 import db from "../connection";
-import { ADD_PLAYER, ALL_PLAYER_DATA, AVAILABLE_CARDS_FOR_GAME, AVAILABLE_GAMES, CREATE_GAME, DEAL_CARDS, GET_GAME_PLAYERS, GET_PLAYER_CARDS, GET_PLAYER_COUNT, GET_TOP_CARD, INSERT_INITIAL_CARDS, IS_CURRENT, LOOKUP_CARD, SHUFFLE_DISCARD_PILE } from "./sql";
+import { ADD_PLAYER, ALL_PLAYER_DATA, AVAILABLE_CARDS_FOR_GAME, AVAILABLE_GAMES, CREATE_GAME, DEAL_CARDS, END_TURN, GET_GAME_PLAYERS, GET_NEXT_PLAYER, GET_PLAYER_CARDS, GET_PLAYER_COUNT, GET_TOP_CARD, INSERT_INITIAL_CARDS, IS_CURRENT, LOOKUP_CARD, SET_NEXT_SEAT, SET_TOP_CARD, SHUFFLE_DISCARD_PILE } from "./sql";
 
 type GameDescription = {
     id: number;
@@ -12,6 +12,7 @@ type GameDescription = {
 const create = async (playerId: number): Promise<GameDescription> => {
     const game = await db.one<GameDescription>(CREATE_GAME);
     await db.any(INSERT_INITIAL_CARDS, game.id);
+    await db.any(DEAL_CARDS, [-1, game.id, 1]);
     await join(playerId, game.id);
 
     return game;
@@ -44,7 +45,6 @@ const drawCard = async (gameId: number, playerId: number) => {
     const availableCards = result?.count ? parseInt(result.count, 10) : 0;
     //console.log(availableCards);
     if (availableCards === 0) {
-        console.log("I shouldn't see this");
         await db.none(SHUFFLE_DISCARD_PILE, [gameId]);
     }
 
@@ -53,12 +53,135 @@ const drawCard = async (gameId: number, playerId: number) => {
 };
 
 // user_id: -1 for top of discard pile, -2 for rest of discard pile
-const playCard = async (playerId: number,
+const playCard = async (user_id: number,
     gameId: number,
-    cardId: string,
-    pile: number) => {
+    cardId: number,) => {   // may have to change cardId to string  
+    // check if the card can be played
+    if (!await playable(cardId, gameId)) {
+        return;
+    }
+
+    // move card to top of discard pile
+    await db.one(SET_TOP_CARD, gameId, cardId as any);
+
+    // actually use the card and any extra effect it has
+
+    const card = await db.one(LOOKUP_CARD, cardId);
+    if (card.value < 10) {  // normal cards 9-0
+        endTurn(gameId);
+        return;
+    }
+    if (card.value === 10) { // reverse
+        useReverse(gameId);
+        //do reverse stuff
+    } else if (card.value === 11) { // skip
+        useSkip(gameId);
+    } else if (card.value === 12) { // draw 2
+        useDrawTwo(gameId);
+    } else if (card.value === 14) { // wild draw 4
+        useWildDrawFour(gameId);
+    }
 
 };
+
+
+const endTurn = async (gameId: number) => {
+    const { current_seat, next_seat, player_count } = await db.one(`SELECT current_seat,
+        next_seat, player_count from games WHERE game_id = $1`, gameId);
+
+    let temp;
+    if (next_seat > current_seat) {
+        if ((next_seat + 1) > player_count) {
+            temp = 0;
+        } else {
+            temp = next_seat + 1;
+        }
+    } else {
+        if ((next_seat - 1) > 0) {
+            temp = next_seat - 1;
+        } else {
+            temp = player_count;
+        }
+    }
+    await db.none(END_TURN, [gameId, next_seat])
+    await db.none(SET_NEXT_SEAT, [gameId, temp]);
+
+}
+
+const useWildDrawFour = async (gameId: number) => {
+    const { user_id } = await db.one(GET_NEXT_PLAYER);
+
+    // make next user draw 2
+    await db.any(DEAL_CARDS, [user_id, gameId, 4]);
+
+    // skip their turn
+    useSkip(gameId);
+}
+
+const useDrawTwo = async (gameId: number) => {
+    const { user_id } = await db.one(GET_NEXT_PLAYER);
+
+    // make next user draw 2
+    await db.any(DEAL_CARDS, [user_id, gameId, 2]);
+
+    // skip their turn
+    useSkip(gameId);
+}
+
+const useSkip = async (gameId: number) => {
+    const { current_seat, next_seat, player_count } = await db.one(`SELECT current_seat,
+        next_seat, player_count from games WHERE game_id = $1`, gameId);
+
+    let temp;
+
+    if (next_seat > current_seat) {
+        if ((next_seat + 1) > player_count) {
+            temp = 0;
+        } else {
+            temp = next_seat + 1;
+        }
+    } else {
+        if ((next_seat - 1) > 0) {
+            temp = next_seat - 1;
+        } else {
+            temp = player_count;
+        }
+    }
+    await db.one(SET_NEXT_SEAT, gameId, temp);
+    endTurn(gameId);
+    return temp;
+}
+
+const useReverse = async (gameId: number) => {
+    // get variables
+    const { current_seat, next_seat, player_count } = await db.one(`SELECT current_seat,
+        next_seat, player_count from games WHERE game_id = $1`, gameId);
+
+    let temp;   // new next_seat
+
+    // check which way it's going
+    if (next_seat > current_seat) {
+        if ((current_seat - 1) > 0) {
+            temp = current_seat - 1;
+        } else {
+            temp = player_count;
+        }
+    } else {
+        if ((current_seat + 1) > player_count) {
+            temp = 1;
+        } else {
+            temp = current_seat + 1;
+        }
+    }
+
+    await db.one(SET_NEXT_SEAT, gameId, temp);
+    endTurn(gameId);
+    return temp;
+}
+
+const getNextSeat = async (gameId: number) => {
+    return await db.one(`SELECT next_seat from games WHERE game_id = $1`, gameId);
+}
 
 const playerGames = async (
     playerId: number,
@@ -98,7 +221,8 @@ const getPlayers = async (
 };
 
 const isCurrentPlayer = async (gameId: number, userId: number) => {
-    return (await db.one(IS_CURRENT, [gameId, userId])).count === "1";
+    const current = await db.one(IS_CURRENT, [gameId, userId]);
+    return current.is_current_player;
 };
 
 // returns true if card is playable

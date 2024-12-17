@@ -18,7 +18,6 @@ export const canPlayerDraw = async (
     const avaliablePlays = await Games.playableCards(gameId, userId);
 
     const socket = request.app.get("io");
-
     if (avaliablePlays === 0) {
         next();
     } else {

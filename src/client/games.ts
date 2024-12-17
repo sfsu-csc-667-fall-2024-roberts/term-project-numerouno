@@ -4,13 +4,13 @@ import { updateGame } from "./games/update-game";
 
 const gameId = window.location.pathname.split("/").pop();
 
-window.socket.on(`game:${gameId}:updated`, (game) => {
-    updateGame(game);
-});
+// window.socket.on(`game:${gameId}:updated`, (game) => {
+//     updateGame(game);
+// });
 
-setTimeout(() => {
-    fetch(`/games/${gameId}/update`);
-}, 1000);
+// setTimeout(() => {
+//     fetch(`/games/${gameId}/update`);
+// }, 1000);
 
 document.querySelector<HTMLFormElement>("#draw-pile")!
     .addEventListener("click", (event) => {
