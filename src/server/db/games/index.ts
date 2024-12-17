@@ -137,6 +137,31 @@ const getTopCard = async (gameId: number) => {
     return await db.one(GET_TOP_CARD, gameId);
 }
 
+const getRandomCard = async () => {
+    const card = await db.one<{ id: number; color: number; value: string }>(`
+        SELECT id, color, value
+        FROM cards
+        ORDER BY random()
+        LIMIT 1
+    `);
+
+    // Number to card names (as strings)
+    const cardValueMap: { [key: string]: string } = {
+        "10": "Skip",
+        "11": "Reverse",
+        "12": "Draw Two",
+        "13": "Wild",
+        "14": "Wild Draw Four"
+    };
+
+    // If the value is one of the special cards (10-14), replace the numeric value with the string equivalent
+    if (cardValueMap[card.value]) {
+        card.value = cardValueMap[card.value];  // Replace numeric value with word
+    }
+
+    return card;
+};
+
 export default {
     create,
     join,
@@ -147,6 +172,7 @@ export default {
     playerGames,
     get,
     isCurrentPlayer,
+    getRandomCard,
     playableCards,
     getPlayerHand,
     getPlayers,
