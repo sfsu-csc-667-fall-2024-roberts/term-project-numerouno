@@ -1,10 +1,16 @@
 export const getCardValue = (value: number): string => {
     // add rest of card values
     switch (value) {
-        case 0:
-            return "Skip-Bo";
         case 10:
             return "reverse";
+        case 11:
+            return "skip";
+        case 12:
+            return "draw 2";
+        case 13:
+            return "wild";
+        case 14:
+            return "wild +4"
         default:
             return value.toString();
     }

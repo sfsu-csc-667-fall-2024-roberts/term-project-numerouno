@@ -225,6 +225,21 @@ const isCurrentPlayer = async (gameId: number, userId: number) => {
     return current.is_current_player;
 };
 
+const isInGame = async (gameId: number, userId: number) => {
+    // return await db.any(`SELECT user_id FROM game_users WHERE game_id = $1`, gameId);
+    const players = await db.any(`SELECT user_id FROM game_users WHERE game_id = $1`, gameId);
+
+
+
+    for (const player of players) {
+        if (userId == player.user_id) {
+            return true;  // This will exit the function as expected
+        }
+    }
+
+    return false;
+}
+
 // returns true if card is playable
 const playable = async (cardId: number, gameId: number) => {
     const card = await db.one(LOOKUP_CARD, cardId);
@@ -301,4 +316,5 @@ export default {
     getPlayerHand,
     getPlayers,
     getTopCard,
+    isInGame,
 };

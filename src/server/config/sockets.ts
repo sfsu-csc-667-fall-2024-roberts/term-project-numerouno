@@ -30,7 +30,6 @@ const bindSession = async (socket: Socket) => {
     const roomId = request.session?.roomId;
 
 
-
     socket.join(`user-${userId}`);
     socket.join(`chat-${roomId}`);
     socket.join(`game-${roomId}`);

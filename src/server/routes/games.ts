@@ -13,13 +13,22 @@ router.post("/create", async (request, response) => {
     response.redirect(`/games/${game.id}`);
 });
 
-router.post("/join/:gameId", async (request, response) => {
+router.post("/join/:gameId", async (request, response, next) => {
     // @ts-expect-error TODO update session to include user id
     const { id: userId, username: username } = request.session.user;
     const { gameId } = request.params;
 
     // Validate:
     // - Check to make sure user is not already in this game
+
+    const alreadyIn = await Games.isInGame(parseInt(gameId, 10), userId);
+    console.log("already in: ", alreadyIn);
+    if (!alreadyIn) {
+        console.log("new player");
+    } else {
+        response.redirect(`/games/${gameId}`);
+        return;
+    }
 
     const { count } = await Games.getPlayerCount(parseInt(gameId, 10));
     const playerCount = parseInt(count, 10);
@@ -59,17 +68,17 @@ router.post(
     isPlayersTurn,
     canPlayerDraw,
     async (request, _response, next) => {
-        console.log("hi");
+        console.log("in draw");
         const gameId = parseInt(request.params.gameId, 10);
         const userId = (request.session as any).user?.id;
         await Games.drawCard(gameId, userId);
 
-        // next();
+        next();
     },
-    // broadcastGameUpdate,
-    // (_request, response) => {
-    //     response.sendStatus(200);
-    // },
+    broadcastGameUpdate,
+    (_request, response) => {
+        response.sendStatus(200);
+    },
 
 );
 
@@ -88,13 +97,28 @@ router.get("/:gameId/lobby", (request, response) => {
     response.render("games/game-lobby", { title: "Game lobby", gameId });
 });
 
+router.get("/:gameId", async (request, response) => {
+    const { gameId } = request.params;
+    // @ts-expect-error TODO: Define the session type for the user object
+    const { id: userId } = request.session.user;
 
-function next() {
-    throw new Error("Function not implemented.");
-}
+    const game = await Games.get(parseInt(gameId, 10), userId);
+
+    response.render("games/game", {
+        title: `Game ${gameId}`,
+        gameId,
+        game,
+        userId,
+    });
+});
 
 router.get("/:gameId", async (request, response) => {
     const { gameId } = request.params;
+    // @ts-expect-error
+    const { id: userId } = request.session.user;
+
+    const game = await Games.get(parseInt(gameId, 10), userId);
+
 
     try {
         const cards = await Games.getRandomCard();

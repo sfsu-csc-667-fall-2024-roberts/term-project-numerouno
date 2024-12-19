@@ -18,6 +18,7 @@ export const createPlayerElement = ({
     const playerElement = playerTemplate.content.cloneNode(
         true,
     ) as HTMLDivElement;
+    console.log("in create player element with ", username);
 
     if (is_current) {
         playerElement.firstElementChild?.classList.add("current-player");
@@ -54,7 +55,7 @@ export const createPlayerElement = ({
     // ADJUST THESE FOR ACTUAL STUFF
     const topCard = cardTemplate.content.cloneNode(true) as HTMLDivElement;
 
-    topCard.querySelector("span")!.textContent = getCardValue(top_card.value);
+    // topCard.querySelector("span")!.textContent = getCardValue(top_card.value);
 
     // update top card color 
     // topCard.querySelector("class")!.textContent = getCardValue(top_card.color);

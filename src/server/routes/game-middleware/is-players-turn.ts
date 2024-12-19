@@ -22,6 +22,8 @@ export const isPlayersTurn = async (
         userId,
     );
 
+
+
     if (!isCurrentPlayer) {
         response.sendStatus(401);
 
