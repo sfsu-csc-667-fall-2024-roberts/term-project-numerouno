@@ -134,4 +134,28 @@ router.get("/:gameId", async (request, response) => {
     }
 });
 
+router.post(
+    "/:gameId",
+    isPlayersTurn,
+    async (request, response, next) => {
+        const { gameId } = request.params;
+        const { cardId } = request.body; 
+        const userId = (request.session as any).user?.id;
+
+        try {
+            // Call the playCard function
+            await Games.playCard(parseInt(gameId, 10), cardId);
+            next();
+        } catch (error) {
+            console.error("Error playing card:", error);
+        }
+    },
+    broadcastGameUpdate, // Update game state
+    (_request, response) => {
+        response.status(200).json({
+            success: true,
+            message: "Card played successfully",
+        });
+    },
+);
 export default router;
