@@ -1,6 +1,5 @@
 <template id="chat-message-template">
-    <li class="chat-message flex flex-row items-center">
-
+    <li class="chat-message flex flex-row items-center border p-2 rounded-md bg-white mb-2">
         <img
             class="gravatar w-[16px] h-[16px] rounded-[8px] mr-[4px] self-start"
             alt="sender" />
@@ -9,12 +8,12 @@
     </li>
 </template>
 
-<aside id="chat-section" class="h-[300px] flex flex-col">
-    <ul id="messages">
+<aside id="chat-section" class="flex flex-col h-full p-4 border-l border-gray-300">
+    <ul id="messages" class="flex-1 overflow-y-auto mb-4 border p-2 rounded-md bg-white">
     </ul>
-    <form method="post" class="flex flex-row h-[20px] mt-[8px]">
-        <input id="chat-message" autocomplete="off" />
-        <button type="submit">Send</button>
+    <form id="chat-form" method="post" class="flex">
+        <input id="chat-message" class="flex-grow border border-gray-300 p-2 rounded-md" autocomplete="off" />
+        <button type="submit" class="ml-2 bg-blue-500 text-white p-2 rounded-md">Send</button>
     </form>
 </aside>
 <script src="/js/chat.js"></script>
