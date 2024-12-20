@@ -8,14 +8,11 @@
             <!-- Card Pile and Draw Pile Container -->
             <div class="pile-container flex justify-center space-x-8">
                 <!-- Card Pile -->
-                <div class="pile">
-                    <h2>Card Pile</h2>
-                    <div class="card" value="3">2</div> <!-- Blue 2 card -->
+                <div id="play-pile" class="play-pile">
                 </div>
 
                 <!-- Draw Pile -->
                 <div class="draw-pile">
-                    <h2>Draw Pile</h2>
                     <div id="draw-pile" data-game-id="<%= gameId %>"
                         class="card draw-back">Draw</div>
                 </div>
@@ -24,42 +21,12 @@
             <div class="players">
                 <section>
                     <!-- Player 1 -->
-                    <div id="player-area" class="player">
-                        <h2>Player 1</h2>
-                        <div class="cards">
-
-                        </div>
-                    </div>
-                    <!-- 
-                    Player 2
-                    <div class="player">
-                        <h2>Player 2</h2>
-                        <div class="cards">
-                            <div class="card" value="0">0</div>
-                           
-                            <div class="card" value="1">1</div>
-                           
-                            <div class="card" value="2">2</div>
-                      
-                            <div class="card" value="3">3</div>
-                         
-                        </div>
+                    <div id="player-area" class>
                     </div>
 
-                  
-                    <div class="player">
-                        <h2>Player 3</h2>
-                        <div class="cards">
-                            <div class="card" value="0">0</div>
-                           
-                            <div class="card" value="1">1</div>
-                           
-                            <div class="card" value="2">2</div>
-                        
-                            <div class="card" value="3">3</div>
-                       
-                        </div>
-                    </div> -->
+                    <div id="opponent-area" class>
+                    </div>
+
                 </section>
                 <%- include('./template') %>
             </div>

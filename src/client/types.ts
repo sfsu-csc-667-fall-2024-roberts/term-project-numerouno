@@ -12,7 +12,7 @@ export type Player = {
     seat: number;
     username: string;
     num_cards: number;
-    top_card: Card;
+    topCard: Card;
 };
 
 export type GameState = {

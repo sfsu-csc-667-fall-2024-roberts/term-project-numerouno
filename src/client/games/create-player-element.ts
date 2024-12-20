@@ -12,28 +12,26 @@ export const createPlayerElement = ({
     hand,
     is_current,
     num_cards,
-    top_card,
+    topCard,
     username,
 }: Omit<Player, "hand"> & { hand?: Card[] }) => {
     const playerElement = playerTemplate.content.cloneNode(
         true,
     ) as HTMLDivElement;
-    console.log("in create player element with ", username);
+    //console.log("in create player element with ", username);
 
     if (is_current) {
         playerElement.firstElementChild?.classList.add("current-player");
     }
 
-    // Update gravatar
-    const gravatarElement =
-        playerElement.querySelector<HTMLImageElement>("h4 img")!;
-    gravatarElement.src = `https://www.gravatar.com/avatar/${gravatar}`;
-    gravatarElement.alt = username;
+    // Update num cards
+    playerElement.querySelector("h4 span.card-count")!.textContent =
+        ` ${num_cards} cards`;
 
     // Update username
     playerElement.querySelector("h4 span.username")!.textContent = username;
-    playerElement.querySelector("h4 span.card-count")!.textContent =
-        `${num_cards} cards`;
+    // playerElement.querySelector("h4 span.card-count")!.textContent =
+    //     `${num_cards} cards`;
 
 
     // Update hand
@@ -42,23 +40,13 @@ export const createPlayerElement = ({
         const cardElement = cardTemplate.content.cloneNode(true) as HTMLDivElement;
 
         const cardDiv = cardElement.querySelector<HTMLDivElement>("div.card")!;
-        cardDiv.classList.add(`value-${card.color}`, "source-card");
+        cardDiv.classList.add(`color-${card.color}`, "source-card");
         cardDiv.dataset.cardId = card.id.toString();
 
         cardElement.querySelector("span")!.textContent = getCardValue(card.value);
 
         handElement.appendChild(cardElement);
     });
-
-
-    // Update top card
-    // ADJUST THESE FOR ACTUAL STUFF
-    const topCard = cardTemplate.content.cloneNode(true) as HTMLDivElement;
-
-    // topCard.querySelector("span")!.textContent = getCardValue(top_card.value);
-
-    // update top card color 
-    // topCard.querySelector("class")!.textContent = getCardValue(top_card.color);
 
     return playerElement;
 }

@@ -6,7 +6,7 @@ export const getCardValue = (value: number): string => {
         case 11:
             return "skip";
         case 12:
-            return "draw 2";
+            return "+2";
         case 13:
             return "wild";
         case 14:

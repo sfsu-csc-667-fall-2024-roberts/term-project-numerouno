@@ -12,10 +12,12 @@ h1, h2 {
 
 .pile-container {
     margin: 20px 0;
+    justify-content: center;
 }
 
 .pile, .draw-pile {
     text-align: center;
+    padding-left: 40px;
 }
 
 .card {
@@ -38,24 +40,29 @@ h1, h2 {
 }
 
 /* Apply background color based on card value */
-.card[value='0'] {
+.card.color-0 {
     background-color: #ff4c4c; /* Red for 0 */
     color: white;
 }
 
-.card[value='1'] {
+.card.color-1 {
     background-color: #4caf50; /* Green for 1 */
     color: white;
 }
 
-.card[value='2'] {
+.card.color-2 {
     background-color: #2196f3; /* Blue for 2 */
     color: white;
 }
 
-.card[value='3'] {
+.card.color-3 {
     background-color: #ffeb3b; /* Yellow for 3 */
     color: black;
+}
+
+.card.color-4 {
+    background-color: #2C2C2C; /* Blue for 2 */
+    color: white;
 }
 
 /* Player area */
@@ -70,7 +77,7 @@ h1, h2 {
     padding: 20px;
     background-color: white;
     border-radius: 10px;
-    width: 200px;
+
     text-align: center;
 }
 
@@ -84,3 +91,6 @@ h1, h2 {
     justify-content: center;
 }
 
+span.card-count {
+    padding-left: 30px;
+}

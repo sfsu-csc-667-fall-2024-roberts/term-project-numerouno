@@ -5,7 +5,6 @@ import { updateGame } from "./games/update-game";
 const gameId = window.location.pathname.split("/").pop();
 
 window.socket.on(`game:${gameId}:updated`, (game) => {
-    console.log("update called");
     updateGame(game);
 });
 
@@ -15,8 +14,6 @@ setTimeout(() => {
 
 document.querySelector<HTMLFormElement>("#draw-pile")!
     .addEventListener("click", (event) => {
-
-
         const gameId = (event.target as HTMLDivElement).dataset.gameId;
         if (gameId === undefined) {
             console.log("gameid undefined");
@@ -29,7 +26,6 @@ document.querySelector<HTMLFormElement>("#draw-pile")!
 
 
 
-//
-// document
-//     .querySelector<HTMLDivElement>("#playing-table")!
-//     .addEventListener("click", cardClickHandler);
+document
+    .querySelector<HTMLFormElement>("#player-area")!
+    .addEventListener("click", cardClickHandler);

@@ -53,7 +53,7 @@ const drawCard = async (gameId: number, playerId: number) => {
 };
 
 // user_id: -1 for top of discard pile, -2 for rest of discard pile
-const playCard = async (user_id: number,
+const playCard = async (
     gameId: number,
     cardId: number,) => {   // may have to change cardId to string  
     // check if the card can be played
@@ -273,7 +273,8 @@ const getPlayerHand = async (gameId: number, playerId: number) => {
 };
 
 const getTopCard = async (gameId: number) => {
-    return await db.one(GET_TOP_CARD, gameId);
+    const topCard = await db.one(GET_TOP_CARD, gameId);
+    return topCard;
 }
 
 const getRandomCard = async () => {

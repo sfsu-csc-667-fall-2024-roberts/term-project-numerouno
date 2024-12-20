@@ -14,13 +14,13 @@ export const broadcastGameUpdate = async (
 
     for (let index = 0; index < playerData.length; index++) {
         const player = playerData[index];
-
+        const tCard = await Games.getTopCard(gameId);
         socket.to(`user-${player.id}`).emit(`game:${gameId}:updated`, {
             players: playerData.filter((p: { id: any; }) => p.id !== player.id),
             player: {
                 ...playerData.find((p: { id: any; }) => p.id === player.id),
                 hand: await Games.getPlayerHand(gameId, player.id),
-                topCard: await Games.getTopCard(gameId),
+                topCard: tCard,
             },
         });
     }
