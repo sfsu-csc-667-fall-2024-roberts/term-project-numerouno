@@ -2,38 +2,39 @@
 <html lang="en">
     <%- include ('../partials/head') %>
     <body class="text-[12px]">
-        <div class="container mx-auto">
-            <%- include('../partials/menu') %>
+        <div class="container mx-auto flex">
+            <!-- Main Game Area -->
+            <div class="flex-grow">
+                <%- include('../partials/menu') %>
 
-            <!-- Card Pile and Draw Pile Container -->
-            <div class="pile-container flex justify-center space-x-8">
-                <!-- Card Pile -->
-                <div id="play-pile" class="play-pile">
+                <!-- Card Pile and Draw Pile Container -->
+                <div class="pile-container flex justify-center space-x-8">
+                    <!-- Card Pile -->
+                    <div id="play-pile" class="play-pile">
+                    </div>
+
+                    <!-- Draw Pile -->
+                    <div class="draw-pile">
+                        <div id="draw-pile" data-game-id="<%= gameId %>"
+                            class="card draw-back">Draw</div>
+                    </div>
                 </div>
+                <!-- Players -->
+                <div class="players">
+                    <section>
+                        <div id="player-area" class>
+                        </div>
 
-                <!-- Draw Pile -->
-                <div class="draw-pile">
-                    <div id="draw-pile" data-game-id="<%= gameId %>"
-                        class="card draw-back">Draw</div>
+                        <div id="opponent-area" class>
+                        </div>
+
+                    </section>
+                    <%- include('./template') %>
                 </div>
             </div>
 
-            <div class="players">
-                <section>
-                    <!-- Player 1 -->
-                    <div id="player-area" class>
-                    </div>
-
-                    <div id="opponent-area" class>
-                    </div>
-
-                </section>
-                <%- include('./template') %>
-            </div>
-
+            <div class="basis-2/6 border-gray-500 ml-4"><%- include('../partials/chat') %></div>
         </div>
-        <div class="basis-2/6"><%- include('../partials/chat') %></div>
         <script src="/js/games.js"></script>
     </body>
-
 </html>
