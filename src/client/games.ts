@@ -5,6 +5,7 @@ import { updateGame } from "./games/update-game";
 const gameId = window.location.pathname.split("/").pop();
 
 window.socket.on(`game:${gameId}:updated`, (game) => {
+    window.roomId = gameId as any;
     updateGame(game);
 });
 

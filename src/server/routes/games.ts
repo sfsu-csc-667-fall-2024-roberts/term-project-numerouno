@@ -126,7 +126,8 @@ router.get("/:gameId", async (request, response) => {
         response.render("games/game", {
             title: `Game ${gameId}`,
             gameId,
-            cards,
+            game,
+            userId,
         });
     } catch (err) {
         console.error(err);
@@ -139,13 +140,19 @@ router.post(
     isPlayersTurn,
     async (request, response, next) => {
         const { gameId } = request.params;
-        const { cardId } = request.body; 
+        const { cardId } = request.body;
         const userId = (request.session as any).user?.id;
-
+        console.log("trying to play card");
         try {
             // Call the playCard function
-            await Games.playCard(parseInt(gameId, 10), cardId);
-            next();
+            const ans = await Games.playCard(parseInt(gameId, 10), cardId);
+            console.log(ans);
+            if (ans) {
+                next();
+            } else {
+                return;
+            }
+
         } catch (error) {
             console.error("Error playing card:", error);
         }

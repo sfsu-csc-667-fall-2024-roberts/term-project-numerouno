@@ -1,6 +1,6 @@
 
 import db from "../connection";
-import { ADD_PLAYER, ALL_PLAYER_DATA, AVAILABLE_CARDS_FOR_GAME, AVAILABLE_GAMES, CREATE_GAME, DEAL_CARDS, END_TURN, GET_GAME_PLAYERS, GET_NEXT_PLAYER, GET_PLAYER_CARDS, GET_PLAYER_COUNT, GET_TOP_CARD, INSERT_INITIAL_CARDS, IS_CURRENT, LOOKUP_CARD, SET_NEXT_SEAT, SET_TOP_CARD, SHUFFLE_DISCARD_PILE } from "./sql";
+import { ADD_PLAYER, ALL_PLAYER_DATA, AVAILABLE_CARDS_FOR_GAME, AVAILABLE_GAMES, CREATE_GAME, DEAL_CARDS, END_TURN as SET_CURR_SEAT, GET_GAME_PLAYERS, GET_NEXT_PLAYER, GET_PLAYER_CARDS, GET_PLAYER_COUNT, GET_TOP_CARD, GET_TURN_INFO, INSERT_INITIAL_CARDS, IS_CURRENT, LOOKUP_CARD, SET_NEXT_SEAT, SET_TOP_CARD, SHUFFLE_DISCARD_PILE, REVERSE_TURN_ORDER } from "./sql";
 
 type GameDescription = {
     id: number;
@@ -58,18 +58,20 @@ const playCard = async (
     cardId: number,) => {   // may have to change cardId to string  
     // check if the card can be played
     if (!await playable(cardId, gameId)) {
-        return;
+        return false;
     }
-
+    // console.log("In playcard");
+    // console.log("gameid is:", gameId);
+    // console.log("cardId is:", cardId);
     // move card to top of discard pile
-    await db.one(SET_TOP_CARD, gameId, cardId as any);
+    await db.none(SET_TOP_CARD, [gameId, cardId as any]);
 
     // actually use the card and any extra effect it has
 
     const card = await db.one(LOOKUP_CARD, cardId);
     if (card.value < 10) {  // normal cards 9-0
         endTurn(gameId);
-        return;
+        return true;
     }
     if (card.value === 10) { // reverse
         useReverse(gameId);
@@ -81,36 +83,36 @@ const playCard = async (
     } else if (card.value === 14) { // wild draw 4
         useWildDrawFour(gameId);
     }
-
+    return true;
 };
 
 
 const endTurn = async (gameId: number) => {
-    const { current_seat, next_seat, player_count } = await db.one(`SELECT current_seat,
-        next_seat, player_count from games WHERE game_id = $1`, gameId);
+    let { current_seat, next_seat, player_count, turn_order } = await db.one(GET_TURN_INFO, gameId);
 
-    let temp;
-    if (next_seat > current_seat) {
+    let newNext;
+    if (turn_order) {
         if ((next_seat + 1) > player_count) {
-            temp = 0;
+            newNext = 1;
         } else {
-            temp = next_seat + 1;
+            newNext = next_seat + 1;
         }
     } else {
         if ((next_seat - 1) > 0) {
-            temp = next_seat - 1;
+            newNext = next_seat - 1;
         } else {
-            temp = player_count;
+            newNext = player_count;
         }
     }
-    await db.none(END_TURN, [gameId, next_seat])
-    await db.none(SET_NEXT_SEAT, [gameId, temp]);
+    console.log(newNext)
+    await db.none(SET_CURR_SEAT, [gameId, next_seat])
+    await db.none(SET_NEXT_SEAT, [gameId, newNext]);
 
 }
 
 const useWildDrawFour = async (gameId: number) => {
-    const { user_id } = await db.one(GET_NEXT_PLAYER);
-
+    const { user_id } = await db.one(GET_NEXT_PLAYER, gameId);
+    console.log("hi");
     // make next user draw 2
     await db.any(DEAL_CARDS, [user_id, gameId, 4]);
 
@@ -119,7 +121,7 @@ const useWildDrawFour = async (gameId: number) => {
 }
 
 const useDrawTwo = async (gameId: number) => {
-    const { user_id } = await db.one(GET_NEXT_PLAYER);
+    const { user_id } = await db.one(GET_NEXT_PLAYER, gameId);
 
     // make next user draw 2
     await db.any(DEAL_CARDS, [user_id, gameId, 2]);
@@ -129,38 +131,38 @@ const useDrawTwo = async (gameId: number) => {
 }
 
 const useSkip = async (gameId: number) => {
-    const { current_seat, next_seat, player_count } = await db.one(`SELECT current_seat,
-        next_seat, player_count from games WHERE game_id = $1`, gameId);
+    console.log("gameid in skip: ", gameId);
+    // const { current_seat, next_seat, player_count } = await db.one(GET_TURN_INFO, gameId);
 
-    let temp;
+    // let temp;
 
-    if (next_seat > current_seat) {
-        if ((next_seat + 1) > player_count) {
-            temp = 0;
-        } else {
-            temp = next_seat + 1;
-        }
-    } else {
-        if ((next_seat - 1) > 0) {
-            temp = next_seat - 1;
-        } else {
-            temp = player_count;
-        }
-    }
-    await db.one(SET_NEXT_SEAT, gameId, temp);
+    // if (next_seat > current_seat) {
+    //     if ((next_seat + 1) > player_count) {
+    //         temp = 1;
+    //     } else {
+    //         temp = next_seat + 1;
+    //     }
+    // } else {
+    //     if ((next_seat - 1) > 0) {
+    //         temp = next_seat - 1;
+    //     } else {
+    //         temp = player_count;
+    //     }
+    // }
+    // await db.none(SET_NEXT_SEAT, [gameId, temp]);
     endTurn(gameId);
-    return temp;
+    endTurn(gameId);
+    return;
 }
 
 const useReverse = async (gameId: number) => {
     // get variables
-    const { current_seat, next_seat, player_count } = await db.one(`SELECT current_seat,
-        next_seat, player_count from games WHERE game_id = $1`, gameId);
+    const { current_seat, next_seat, player_count, turn_order } = await db.one(GET_TURN_INFO, gameId);
 
     let temp;   // new next_seat
 
     // check which way it's going
-    if (next_seat > current_seat) {
+    if (turn_order) {
         if ((current_seat - 1) > 0) {
             temp = current_seat - 1;
         } else {
@@ -174,13 +176,14 @@ const useReverse = async (gameId: number) => {
         }
     }
 
-    await db.one(SET_NEXT_SEAT, gameId, temp);
+    await db.none(REVERSE_TURN_ORDER, gameId);
+    await db.none(SET_NEXT_SEAT, [gameId, temp]);
     endTurn(gameId);
     return temp;
 }
 
-const getNextSeat = async (gameId: number) => {
-    return await db.one(`SELECT next_seat from games WHERE game_id = $1`, gameId);
+const getSeatInfo = async (gameId: number) => {
+    return await db.one(`SELECT next_seat from games WHERE id = $1`, gameId);
 }
 
 const playerGames = async (
@@ -197,7 +200,7 @@ const get = async (gameId: number, playerId: number) => {
         gameId,
     );
     const players = await db.any(GET_GAME_PLAYERS, gameId);
-    const playerHand = await db.any(GET_PLAYER_CARDS, [playerId, gameId, 0, 8]);
+    const playerHand = await db.any(GET_PLAYER_CARDS, [playerId, gameId, 0]);
     return {
         currentSeat,
         players,
@@ -249,8 +252,8 @@ const playable = async (cardId: number, gameId: number) => {
     const { color: cardColor, value: cardValue } = card;
 
     // color 4 is wild
-    if (topColor === cardColor || topValue === cardValue ||
-        topColor === 4 || cardColor === 4) {
+    if (topColor == cardColor || topValue == cardValue ||
+        topColor == 4 || cardColor == 4) {
         return true;
     }
     return false;

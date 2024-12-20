@@ -4,7 +4,7 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
     pgm.addColumns("games", {
         player_count: {
             type: "integer",
-            default: 4,
+            default: 1,
             notNull: true,
         },
         password: {

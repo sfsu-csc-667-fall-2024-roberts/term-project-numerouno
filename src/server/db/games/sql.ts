@@ -11,6 +11,21 @@ RETURNING
   (SELECT player_count FROM games WHERE id = $1) AS player_count
 `;
 
+export const GET_TURN_INFO = `
+SELECT 
+  games.current_seat, 
+  games.next_seat, 
+  (SELECT COUNT(*) FROM game_users WHERE game_users.game_id = games.id) AS player_count,
+  games.turn_order
+ FROM games
+ WHERE games.id = $1
+`;
+
+export const REVERSE_TURN_ORDER = `
+UPDATE games
+ SET turn_order = NOT turn_order
+ WHERE id = $1
+`;
 
 export const AVAILABLE_GAMES = `
 SELECT *, 
@@ -102,8 +117,8 @@ export const IS_CURRENT = `
     `;
 
 export const GET_NEXT_PLAYER = `
-SELECT * FROM game_users WHERE gameid = $1 AND 
- seat = (SELECT next_seat from games WHERE game_id = $1)
+SELECT * FROM game_users WHERE game_id = $1 AND 
+ seat = (SELECT next_seat from games WHERE id = $1)
 `;
 
 export const LOOKUP_CARD = `
@@ -113,7 +128,7 @@ SELECT * FROM cards WHERE id = $1;
 export const END_TURN = `
 UPDATE games
  SET current_seat = $2
- WHERE game_id = $1;
+ WHERE id = $1;
 `;
 
 export const GET_TOP_CARD = `
@@ -133,8 +148,7 @@ SET user_id = -2
 -- Set the new top card 
 UPDATE game_cards
  SET user_id = -1
- WHERE card_id = $2 AND game_id = $1
- RETURNING *;
+ WHERE card_id = $2 AND game_id = $1;
 
 COMMIT;
 `;
@@ -142,7 +156,7 @@ COMMIT;
 export const SET_NEXT_SEAT = `
 UPDATE games
  SET next_seat = $2
- WHERE game_id = $1
+ WHERE id = $1
 `;
 
 export const ALL_PLAYER_DATA = `

@@ -22,7 +22,7 @@ router.get("/", async (request, response) => {
     });
 
 
-    response.render("main-lobby", { title: "Lobby Main Page", availableGames });
+    response.render("main-lobby", { title: "Lobby Main Page", availableGames, roomId: 0 });
 });
 
 export default router;

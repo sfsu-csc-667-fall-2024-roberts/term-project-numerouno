@@ -40,7 +40,7 @@ export const createPlayerElement = ({
         const cardElement = cardTemplate.content.cloneNode(true) as HTMLDivElement;
 
         const cardDiv = cardElement.querySelector<HTMLDivElement>("div.card")!;
-        cardDiv.classList.add(`color-${card.color}`, "source-card");
+        cardDiv.classList.add(`color-${card.color}`, `cardId-${card.id}`, "source-card");
         cardDiv.dataset.cardId = card.id.toString();
 
         cardElement.querySelector("span")!.textContent = getCardValue(card.value);
