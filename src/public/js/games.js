@@ -46,7 +46,7 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
   \********************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.getCardValue = void 0;\nconst getCardValue = (value) => {\n    // add rest of card values\n    switch (value) {\n        case 10:\n            return \"reverse\";\n        case 11:\n            return \"skip\";\n        case 12:\n            return \"+2\";\n        case 13:\n            return \"wild\";\n        case 14:\n            return \"wild +4\";\n        default:\n            return value.toString();\n    }\n};\nexports.getCardValue = getCardValue;\n\n\n//# sourceURL=webpack://team-alpha-uno/./src/client/games/get-card-value.ts?");
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.getCardValue = void 0;\nconst getCardValue = (value) => {\n    // add rest of card values\n    switch (value) {\n        case 10:\n            return \"rev -><-\";\n        case 11:\n            return \"skip\";\n        case 12:\n            return \"+2\";\n        case 13:\n            return \"wild\";\n        case 14:\n            return \"wild +4\";\n        default:\n            return value.toString();\n    }\n};\nexports.getCardValue = getCardValue;\n\n\n//# sourceURL=webpack://team-alpha-uno/./src/client/games/get-card-value.ts?");
 
 /***/ }),
 

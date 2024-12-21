@@ -40,23 +40,19 @@ form.addEventListener('submit', (e) => {
         `message:${window.roomId}`,
         ({
             message,
-            sender,
-            gravatar,
+            username
         }: {
             message: string;
-            sender: string;
+            username: string;
             timestamp: string;
-            gravatar: string;
         }) => {
             const messageElement = messageTemplate.content.cloneNode(
                 true,
             ) as HTMLElement;
 
             // change to username
-            messageElement.querySelector("img")!.src =
-                `https://www.gravitar.com/avatar/${gravatar}`;
-            messageElement.querySelector("img")!.alt = sender;
-            messageElement.querySelector("span")!.textContent = message;
+            messageElement.querySelector("span.username")!.textContent = username + " ";
+            messageElement.querySelector("span.content")!.textContent = message;
 
 
             messageArea.appendChild(messageElement);

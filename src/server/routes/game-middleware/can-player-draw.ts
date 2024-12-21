@@ -25,7 +25,7 @@ export const canPlayerDraw = async (
 
         socket.to(`user-${userId}`).emit(`message:${gameId}`, {
             message: "You have a usable card",
-            sender: "system",
+            username: "system",
             gravatar: "123456789?d=robohash",
             timestamp: new Date(),
         });

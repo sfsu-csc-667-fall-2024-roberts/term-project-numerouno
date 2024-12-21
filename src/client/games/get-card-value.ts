@@ -2,7 +2,7 @@ export const getCardValue = (value: number): string => {
     // add rest of card values
     switch (value) {
         case 10:
-            return "reverse";
+            return "rev -><-";
         case 11:
             return "skip";
         case 12:

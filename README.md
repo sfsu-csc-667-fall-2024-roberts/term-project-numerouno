@@ -5,5 +5,3 @@
 
 - Pasang Sherpa
 - Kenneth Wen
-- Elliot Verduzco
-- Hritik Milnd Zope

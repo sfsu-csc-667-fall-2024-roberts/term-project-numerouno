@@ -29,8 +29,7 @@ export const isPlayersTurn = async (
 
         socket.to(`user-${userId}`).emit(`message:${gameId}`, {
             message: "You can not play when it is not your turn",
-            sender: "system",
-            gravatar: "123456789?d=robohash",
+            username: "system",
             timestamp: new Date(),
         });
 
