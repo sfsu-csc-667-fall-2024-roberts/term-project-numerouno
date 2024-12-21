@@ -114,6 +114,8 @@ span.card-count {
     width: 300px;
     height: 400px; /* Set a fixed height */
     max-height: 400px; /* Ensure it doesn't expand beyond this */
+    max-width: 300px;
+    padding: 16px;
     border: 2px solid #cccccc86;
     z-index: 1000;
 }
